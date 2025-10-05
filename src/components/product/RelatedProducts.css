@@ -1,0 +1,86 @@
+/* Override HomeCard's built-in column classes within RelatedProducts */
+.related-product-wrapper > div[class*='col'] {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 0 0 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Ensure the card takes full width of its container */
+.related-product-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make the entire card more compact */
+.related-product-wrapper a {
+  display: block;
+  height: 100%;
+}
+
+/* Increase image size to dominate the card */
+.related-product-wrapper img {
+  height: 200px !important;
+  max-height: 200px !important;
+  object-fit: cover !important;
+  width: 100% !important;
+}
+
+/* Minimize card body padding */
+.related-product-wrapper > div > a > div > div:last-child {
+  padding: 0.4rem 0.5rem !important;
+}
+
+/* Make title very compact - single line */
+.related-product-wrapper h5 {
+  font-size: 0.75rem !important;
+  margin-bottom: 0.2rem !important;
+  line-height: 1.1 !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600 !important;
+}
+
+/* Make price compact and bold */
+.related-product-wrapper h6 {
+  font-size: 0.85rem !important;
+  margin-bottom: 0 !important;
+  font-weight: 700 !important;
+  color: #2ecc71 !important;
+}
+
+/* Hide or minimize rating */
+.related-product-wrapper div[class*='rating'] {
+  font-size: 0.65rem !important;
+  margin-top: 0.1rem !important;
+  opacity: 0.8;
+}
+
+/* Make discount badge tiny */
+.related-product-wrapper span[class*='discount'],
+.related-product-wrapper span[class*='Badge'] {
+  font-size: 0.65rem !important;
+  padding: 0.1rem 0.3rem !important;
+}
+
+/* Reduce the overall card container shadow */
+.related-product-wrapper > div > a > div {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+/* Make price container super compact */
+.related-product-wrapper div[class*='price'] {
+  margin-bottom: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Reduce card image wrapper if it has extra padding */
+.related-product-wrapper div[class*='cardImg'] {
+  margin-bottom: 0 !important;
+}

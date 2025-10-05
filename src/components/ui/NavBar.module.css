@@ -1,0 +1,84 @@
+.navbar {
+  background-color: #10b981; /* Primary green */
+  box-shadow: 0 2px 20px rgba(16, 185, 129, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  border-bottom: 3px solid #059669; /* Darker green border */
+}
+
+.brand {
+  color: white !important;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.brand:hover {
+  transform: scale(1.05);
+  color: #d1fae5 !important; /* Light green on hover */
+}
+
+.toggler {
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.toggler:focus {
+  box-shadow: 0 0 0 3px rgba(209, 250, 229, 0.5) !important;
+}
+
+.cartButton {
+  background-color: white;
+  color: #10b981;
+  border: 2px solid white;
+  min-width: 100px;
+  transition: all 0.3s ease;
+  margin-left: 1rem;
+  font-weight: 600;
+}
+
+.cartButton:hover {
+  background-color: #d1fae5; /* Light green */
+  color: #059669; /* Dark green */
+  border-color: #d1fae5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.cartBadge {
+  background-color: #ef4444; /* Red for contrast */
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .cartButton {
+    margin-left: 0;
+    margin-top: 1rem;
+    width: 100%;
+    text-align: center;
+    background-color: white;
+    color: #10b981;
+  }
+
+  .navbar {
+    padding: 0.8rem 0;
+  }
+
+  .toggler {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Custom scroll behavior for navbar */
+.navbar {
+  transition: all 0.3s ease;
+}
+
+/* Active state for current page */
+.navbar :global(.nav-link.active) {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px;
+}
