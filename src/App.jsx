@@ -5,6 +5,7 @@ import MainLayout from './layout/MainLayout';
 import HomePage from './components/home/HomePage';
 import NotFoundPage from './components/ui/NotFoundPage';
 import ProductPage from './components/product/ProductPage';
+import CartPage from './components/cart/CartPage';
 
 const App = () => {
   const [numCartItems, setNumCartItems] = useState(0);
@@ -47,6 +48,7 @@ const App = () => {
             path="products/:slug"
             element={<ProductPage setNumCartItems = {setNumCartItems}/>}
           />
+          <Route path='cart' element={<CartPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
