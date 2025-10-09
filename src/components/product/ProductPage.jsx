@@ -5,6 +5,7 @@ import RelatedProducts from './RelatedProducts';
 import { useEffect, useState } from 'react';
 import api from '../../api';
 import { BASE_URL } from '../../api';
+import { toast } from 'react-toastify';
 
 const ProductPage = ({ setNumCartItems }) => {
   const { slug } = useParams();
@@ -110,6 +111,7 @@ const ProductPage = ({ setNumCartItems }) => {
       const response = await api.post('add_item/', newItem);
       console.log('Item added successfully:', response.data);
       setInCart(true);
+      toast.success('Product added to cart successfully');
       setNumCartItems(currentValue => currentValue + 1)
     } catch (err) {
       console.error('Error adding to cart:', err);

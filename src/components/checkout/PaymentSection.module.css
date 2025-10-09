@@ -1,0 +1,33 @@
+.card {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.paypalButton {
+  background-color: #0070ba !important;
+  border-color: #0070ba !important;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.paypalButton:hover {
+  background-color: #005a94 !important;
+  border-color: #005a94 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 112, 186, 0.3);
+}
+
+.flutterwaveButton {
+  background-color: #f5a623 !important;
+  border-color: #f5a623 !important;
+  color: white !important;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.flutterwaveButton:hover {
+  background-color: #d98f1c !important;
+  border-color: #d98f1c !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(245);
+}

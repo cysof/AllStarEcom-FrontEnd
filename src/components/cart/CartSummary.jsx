@@ -1,17 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const CartSummary = ({ cartTotal = [] }) => {
+const CartSummary = ({ cartItems = [] }) => {
   // Calculate totals from cart items
-  const subtotal = cartTotal.reduce((total, item) => {
-    const price = parseFloat(item.product?.price || 0);
-    const quantity = parseInt(item.quantity || 0);
-    return total + price * quantity;
+  const subtotal = cartItems.reduce((total, item) => {
+    const itemTotal = parseFloat(item.total || 0);
+    return total + itemTotal;
   }, 0);
 
   const taxRate = 0.1; // 10% tax
   const tax = subtotal * taxRate;
   const total = subtotal + tax;
+
+  // Calculate total number of items
+  const totalItems = cartItems.reduce((count, item) => {
+    return count + parseInt(item.quantity || 0);
+  }, 0);
 
   return (
     <div className="align-self-start sticky-top" style={{ top: '20px' }}>
@@ -22,7 +26,7 @@ const CartSummary = ({ cartTotal = [] }) => {
 
           <div className="d-flex justify-content-between mb-2">
             <span>Items:</span>
-            <span>{cartTotal.length}</span>
+            <span>{totalItems}</span>
           </div>
 
           <div className="d-flex justify-content-between mb-2">
@@ -46,13 +50,13 @@ const CartSummary = ({ cartTotal = [] }) => {
             <button
               className="btn btn-primary w-100 py-2"
               style={{ backgroundColor: '#6050DC', borderColor: '#6050DC' }}
-              disabled={cartTotal.length === 0}
+              disabled={cartItems.length === 0}
             >
               Proceed to Checkout
             </button>
           </Link>
 
-          {cartTotal.length === 0 && (
+          {cartItems.length === 0 && (
             <p className="text-muted text-center mt-2 mb-0 small">
               Add items to checkout
             </p>

@@ -6,6 +6,8 @@ import HomePage from './components/home/HomePage';
 import NotFoundPage from './components/ui/NotFoundPage';
 import ProductPage from './components/product/ProductPage';
 import CartPage from './components/cart/CartPage';
+import CheckOutPage from './components/checkout/CheckOutPage';
+
 
 const App = () => {
   const [numCartItems, setNumCartItems] = useState(0);
@@ -46,9 +48,13 @@ const App = () => {
           <Route index element={<HomePage />} />
           <Route
             path="products/:slug"
-            element={<ProductPage setNumCartItems = {setNumCartItems}/>}
+            element={<ProductPage setNumCartItems={setNumCartItems} />}
           />
-          <Route path='cart' element={<CartPage />} />
+          <Route
+            path="cart"
+            element={<CartPage setNumCartItems={setNumCartItems} />}
+          />
+          <Route path='checkout' element={<CheckOutPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
