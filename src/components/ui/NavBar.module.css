@@ -82,3 +82,94 @@
   background-color: rgba(255, 255, 255, 0.2) !important;
   border-radius: 8px;
 }
+
+/* Add to your existing NavBar.module.css */
+
+/* Scrolled state */
+.navbar.scrolled {
+  padding: 0.5rem 0 !important;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+/* Toggler icon customization */
+.togglerIcon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* Cart icon styling */
+.cartIcon {
+  transition: transform 0.3s ease;
+}
+
+.cartButton:hover .cartIcon {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+/* Cart badge for large numbers */
+.cartBadgeSmall {
+  font-size: 0.65rem !important;
+  padding: 0.3em 0.5em !important;
+}
+
+/* Navbar collapse transitions */
+.navbarCollapse {
+  transition: all 0.3s ease;
+}
+
+/* Animation for cart badge when updated */
+@keyframes bounce {
+  0%, 20%, 60%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  80% {
+    transform: translateY(-2px);
+  }
+}
+
+.cartBadge.updated {
+  animation: bounce 0.6s ease;
+}
+
+/* Mobile specific styles */
+@media (max-width: 768px) {
+  .navbarCollapse {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    margin-top: 1rem;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cartButton {
+    margin-top: 1rem;
+    justify-content: center;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+  .navbar {
+    padding: 1rem 0 !important;
+  }
+  
+  .brand {
+    font-size: 1.75rem !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .navbar,
+  .cartButton,
+  .brand {
+    transition: none;
+  }
+  
+  .cartBadge.updated {
+    animation: none;
+  }
+}

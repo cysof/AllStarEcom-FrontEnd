@@ -2,20 +2,13 @@ import React, { useState } from 'react';
 import api, { BASE_URL } from '../../api';
 import { toast } from 'react-toastify';
 
-const CartItem = ({
-  item,
-  CartItems,
-  setCartItems,
-  setCartTotal,
-  setNumCartItems,
-}) => {
+const CartItem = ({ item, onUpdate }) => {
   const [quantity, setQuantity] = useState(item.quantity);
   const [loading, setLoading] = useState(false);
 
   function updateCartItem() {
-    // Validate quantity before sending
     if (quantity < 1) {
-      alert('Quantity must be at least 1');
+      toast.error('Quantity must be at least 1');
       return;
     }
 
@@ -26,38 +19,15 @@ const CartItem = ({
       .patch('update_quantity/', itemData)
       .then((response) => {
         console.log('Update successful:', response.data);
-
-        // Update the cart items with the new data from backend
-        const updatedItems = CartItems.map((cartItem) =>
-          cartItem.id === item.id ? response.data.data : cartItem
-        );
-
-        // Update cart items state
-        setCartItems(updatedItems);
-
-        // Calculate and update the new total
-        const newTotal = updatedItems.reduce(
-          (acc, curr) => acc + curr.total,
-          0
-        );
-        setCartTotal(newTotal);
-        toast.success('Cart Item updated successfully');
-
-        // Calculate and update the total number of items
-        const totalItems = updatedItems.reduce(
-          (acc, curr) => acc + curr.quantity,
-          0
-        );
-        setNumCartItems(totalItems);
+        toast.success('Cart updated successfully!');
+        if (onUpdate) {
+          onUpdate();
+        }
       })
       .catch((err) => {
         console.log('Error:', err.message);
         console.log('Error details:', err.response?.data);
-
-        // Show error message to user
-        alert('Failed to update cart. Please try again.');
-
-        // Reset quantity to original value
+        toast.error('Failed to update cart. Please try again.');
         setQuantity(item.quantity);
       })
       .finally(() => {
@@ -65,7 +35,6 @@ const CartItem = ({
       });
   }
 
-  // Function to handle remove item
   function removeCartItem() {
     if (window.confirm('Are you sure you want to remove this item?')) {
       setLoading(true);
@@ -73,30 +42,15 @@ const CartItem = ({
       api
         .delete(`remove_cart_item/${item.id}/`)
         .then(() => {
-          // Filter out the removed item
-          const updatedItems = CartItems.filter(
-            (cartItem) => cartItem.id !== item.id
-          );
-          toast.success('Cart item Removed successfuly');
-          setCartItems(updatedItems);
-
-          // Recalculate total
-          const newTotal = updatedItems.reduce(
-            (acc, curr) => acc + curr.total,
-            0
-          );
-          setCartTotal(newTotal);
-
-          // Recalculate total number of items
-          const totalItems = updatedItems.reduce(
-            (acc, curr) => acc + curr.quantity,
-            0
-          );
-          setNumCartItems(totalItems);
+          console.log('Item removed successfully');
+          toast.success('Item removed from cart');
+          if (onUpdate) {
+            onUpdate();
+          }
         })
         .catch((err) => {
           console.error('Error removing item:', err);
-          alert('Failed to remove item. Please try again.');
+          toast.error('Failed to remove item. Please try again.');
         })
         .finally(() => {
           setLoading(false);

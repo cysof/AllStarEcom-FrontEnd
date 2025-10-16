@@ -1,9 +1,11 @@
 .navList {
   align-items: center;
+  gap: 0.5rem;
 }
 
 .navItem {
   margin: 0 0.5rem;
+  position: relative;
 }
 
 .navLink {
@@ -14,13 +16,18 @@
   font-weight: 600;
   position: relative;
   padding: 0.5rem 1rem !important;
+  text-decoration: none !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .navLink:hover {
   background-color: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
-  color: #d1fae5 !important; /* Light green text on hover */
+  color: #d1fae5 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .navLink::after {
@@ -30,9 +37,10 @@
   left: 50%;
   width: 0;
   height: 2px;
-  background-color: #d1fae5;
+  background: linear-gradient(90deg, transparent, #d1fae5, transparent);
   transition: all 0.3s ease;
   transform: translateX(-50%);
+  border-radius: 2px;
 }
 
 .navLink:hover::after {
@@ -43,30 +51,169 @@
   background-color: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.4);
   color: #d1fae5 !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
 .navLink.active::after {
   width: 80%;
-  background-color: #d1fae5;
+  background: linear-gradient(90deg, transparent, #d1fae5, transparent);
+}
+
+/* Username specific styling */
+.navLink.username {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+.navLink.username:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  border-style: solid;
+}
+
+.navLink.username.active {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+  border-style: solid;
+}
+
+/* Logout button specific styling */
+.navLink.logout {
+  color: #fecaca !important;
+  border-color: rgba(254, 202, 202, 0.3);
+}
+
+.navLink.logout:hover {
+  background-color: rgba(254, 202, 202, 0.1);
+  border-color: rgba(254, 202, 202, 0.5);
+  color: #fca5a5 !important;
+}
+
+.navLink.logout::after {
+  background: linear-gradient(90deg, transparent, #fca5a5, transparent);
+}
+
+/* Icon spacing */
+.usernameIcon,
+.logoutIcon,
+.loginIcon,
+.registerIcon {
+  margin-right: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.navLink:hover .usernameIcon,
+.navLink:hover .logoutIcon,
+.navLink:hover .loginIcon,
+.navLink:hover .registerIcon {
+  transform: scale(1.2);
+}
+
+/* Username text styling */
+.usernameText {
+  font-weight: 700;
+  color: #d1fae5;
+}
+
+/* Loading state for logout */
+.navLink.loading {
+  opacity: 0.7;
+  pointer-events: none;
+  position: relative;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Enhanced focus states for accessibility */
+.navLink:focus-visible {
+  outline: 2px solid #d1fae5;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(209, 250, 229, 0.3);
+}
+
+/* Button focus state */
+.navLink.logout:focus-visible {
+  outline: 2px solid #fca5a5;
+  outline-offset: 2px;
+}
+
+/* Enhanced active state with pulse animation */
+.navLink.active {
+  animation: gentlePulse 2s ease-in-out infinite;
+}
+
+@keyframes gentlePulse {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+  }
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
+  .navList {
+    gap: 0.25rem;
+    width: 100%;
+  }
+  
   .navItem {
     margin: 0.25rem 0;
     text-align: center;
+    width: 100%;
   }
   
   .navLink {
     padding: 0.75rem 1rem !important;
     margin: 0.25rem 0;
-    display: block;
+    display: flex;
+    justify-content: center;
     border-radius: 6px;
+    width: 100%;
   }
   
   .navLink:hover {
     background-color: rgba(255, 255, 255, 0.2);
-    transform: translateX(5px);
+    transform: translateX(5px) translateY(-1px);
+  }
+  
+  .navLink::after {
+    bottom: -3px;
+  }
+  
+  .usernameIcon,
+  .logoutIcon,
+  .loginIcon,
+  .registerIcon {
+    margin-right: 0.75rem;
+    font-size: 1.1em;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 576px) {
+  .navLink {
+    padding: 0.6rem 0.8rem !important;
+    font-size: 0.9rem;
+  }
+  
+  .navList {
+    gap: 0.1rem;
   }
 }
 
@@ -84,9 +231,42 @@
 
 .navItem {
   animation: slideIn 0.5s ease forwards;
+  opacity: 0;
 }
 
 .navItem:nth-child(1) { animation-delay: 0.1s; }
 .navItem:nth-child(2) { animation-delay: 0.2s; }
 .navItem:nth-child(3) { animation-delay: 0.3s; }
 .navItem:nth-child(4) { animation-delay: 0.4s; }
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .navLink,
+  .usernameIcon,
+  .logoutIcon,
+  .loginIcon,
+  .registerIcon,
+  .spinner {
+    transition: none;
+    animation: none;
+  }
+  
+  .navLink.active {
+    animation: none;
+  }
+  
+  .navItem {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Ensure button styles match links */
+.navLink.btn {
+  text-align: left;
+  width: 100%;
+}
+
+.navLink.btn:hover {
+  text-decoration: none;
+}
