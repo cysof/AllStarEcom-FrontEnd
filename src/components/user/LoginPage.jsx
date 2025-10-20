@@ -13,20 +13,22 @@ const LoginPage = () => {
   const [apiError, setApiError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const location = useLocation
-  const navigate = useNavigate()
-
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const { setIsAuthenticated, setUsername: setAuthUsername } =
     useContext(AuthContext);
+
+  // Get the redirect path from location state or default to home
+  const from = location.state?.from?.pathname || '/';
 
   // Check if user is already authenticated
   useEffect(() => {
     const token = localStorage.getItem('access');
     if (token) {
-      navigate('/');
+      navigate(from, { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, from]);
 
   // Clear errors when user types
   const handleUsernameChange = (e) => {
@@ -67,11 +69,13 @@ const LoginPage = () => {
   // Fetch username from backend after successful login
   const fetchUsername = async () => {
     try {
+      console.log('Fetching username from backend...');
       const response = await api.get('get_username');
+      console.log('Username response:', response.data);
       return response.data.username;
     } catch (error) {
       console.error('Failed to fetch username:', error);
-      // Fallback to the username used for login
+      console.error('Username error details:', error.response?.data);
       return username.trim();
     }
   };
@@ -91,42 +95,49 @@ const LoginPage = () => {
     setApiError('');
 
     try {
+      console.log('Attempting login with:', { username: username.trim() });
+
       // Step 1: Get authentication tokens
       const response = await api.post('token/', {
         username: username.trim(),
         password: password,
       });
 
-      // Store tokens in localStorage (but NOT username)
+      console.log('Login successful, tokens received:', response.data);
+
+      // Store tokens in localStorage
       localStorage.setItem('access', response.data.access);
       localStorage.setItem('refresh', response.data.refresh);
 
-
-      const from = location.state.from.pathname || "/";
-      navigate(from, {replace: true})
+      console.log('Tokens stored in localStorage');
 
       // Step 2: Fetch actual username from backend
+      console.log('Fetching username from backend...');
       const actualUsername = await fetchUsername();
+      console.log('Actual username:', actualUsername);
 
       // Step 3: Update auth context with the actual username
       setIsAuthenticated(true);
       setAuthUsername(actualUsername);
+      console.log('AuthContext updated');
 
       // Show success toast
       toast.success('Login successful! Redirecting...', {
         position: 'top-right',
         autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
       });
 
-      // Redirect after a short delay to show the toast
+      console.log('Redirecting to:', from);
+
+      // Step 4: Redirect to the intended page after short delay
       setTimeout(() => {
-        navigate('/');
+        navigate(from, { replace: true });
       }, 1000);
     } catch (error) {
+      console.error('Login error details:', error);
+      console.error('Error response:', error.response);
+      console.error('Error message:', error.message);
+
       // Display error message
       if (error.response?.status === 401) {
         setApiError('Invalid username or password');
@@ -143,6 +154,15 @@ const LoginPage = () => {
       } else if (error.response?.data?.non_field_errors) {
         setApiError(error.response.data.non_field_errors[0]);
         toast.error(error.response.data.non_field_errors[0], {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+      } else if (
+        error.code === 'NETWORK_ERROR' ||
+        error.message === 'Network Error'
+      ) {
+        setApiError('Network error. Please check your connection.');
+        toast.error('Network error. Please check your connection.', {
           position: 'top-right',
           autoClose: 3000,
         });
@@ -168,6 +188,13 @@ const LoginPage = () => {
       <div className="login-card shadow">
         <h2 className="login-title">Welcome Back</h2>
         <p className="login-subtitle">Please login to your account</p>
+
+        {/* Display redirect message if applicable */}
+        {from !== '/' && (
+          <div className="alert alert-info" role="alert">
+            Please login to access the requested page.
+          </div>
+        )}
 
         {/* Display API Error */}
         {apiError && (

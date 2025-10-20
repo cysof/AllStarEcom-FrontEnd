@@ -15,14 +15,15 @@ const NavBarLinks = ({ onLinkClick }) => {
     if (onLinkClick) onLinkClick();
   };
 
-  const handleLogout = async () => {
+  const handleLogout = async (e) => {
+    e.preventDefault(); // Prevent immediate navigation
     setIsLoggingOut(true);
 
     try {
       // Optional: Call logout API if you have one
       // await api.post('logout/');
 
-      // Clear tokens from localStorage (no longer storing username)
+      // Clear tokens from localStorage
       localStorage.removeItem('access');
       localStorage.removeItem('refresh');
 
@@ -39,8 +40,8 @@ const NavBarLinks = ({ onLinkClick }) => {
       // Close mobile navbar if function provided
       if (onLinkClick) onLinkClick();
 
-      // Redirect to login page
-      navigate('/login');
+      // Redirect to homepage - NavLink will handle this after state cleanup
+      navigate('/');
     } catch (error) {
       console.error('Logout error:', error);
       toast.error('Error during logout. Please try again.');
@@ -66,27 +67,22 @@ const NavBarLinks = ({ onLinkClick }) => {
               title={`Logged in as ${username}`}
               aria-label={`Logged in as ${username}`}
             >
-              <span className={styles.usernameIcon}>👋</span>
-              Hello, <span className={styles.usernameText}>{username}</span>
+              <span className={styles.usernameIcon}>👤</span>
+              <span className={styles.usernameText}>{username}</span>
             </NavLink>
           </li>
 
-          {/* Logout Button */}
+          {/* Logout Link */}
           <li className={`nav-item ${styles.navItem}`}>
-            <button
+            <NavLink
+              to="/"
               onClick={handleLogout}
-              disabled={isLoggingOut}
-              className={`nav-link btn btn-link ${styles.navLink} ${
-                styles.logout
-              } ${isLoggingOut ? styles.loading : ''}`}
-              style={{
-                border: 'none',
-                background: 'none',
-                cursor: isLoggingOut ? 'not-allowed' : 'pointer',
-                textDecoration: 'none',
-              }}
+              className={`nav-link ${styles.navLink} ${styles.logout} ${
+                isLoggingOut ? styles.loading : ''
+              }`}
               aria-label="Logout"
               aria-busy={isLoggingOut}
+              aria-disabled={isLoggingOut}
             >
               {isLoggingOut ? (
                 <>
@@ -99,7 +95,7 @@ const NavBarLinks = ({ onLinkClick }) => {
                   Logout
                 </>
               )}
-            </button>
+            </NavLink>
           </li>
         </>
       ) : (

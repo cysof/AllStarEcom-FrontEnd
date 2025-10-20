@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GiShoppingCart } from 'react-icons/gi';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import NavBarLinks from './NavBarLinks';
 import styles from './NavBar.module.css';
 
@@ -58,13 +58,14 @@ const NavBar = ({ numCartItems = 0 }) => {
       }`}
     >
       <div className="container">
-        {/* Brand */}
+        {/* Brand - Left Side */}
         <Link
           className={`navbar-brand fw-bold fs-3 ${styles.brand}`}
           to="/"
           onClick={closeNavbar}
         >
-          🌟 AllStar Collection
+          <span>🌟AllStar</span>
+          <span>Fashon</span>
         </Link>
 
         {/* Toggle Button */}
@@ -81,32 +82,78 @@ const NavBar = ({ numCartItems = 0 }) => {
           <span className={`navbar-toggler-icon ${styles.togglerIcon}`}></span>
         </button>
 
-        {/* Navbar Content */}
+        {/* Navbar Content - All items floated right */}
         <div
           className={`collapse navbar-collapse ${styles.navbarCollapse}`}
           id="navbarContent"
         >
-          <NavBarLinks onLinkClick={closeNavbar} />
-
-          {/* Cart Button */}
-          <Link
-            to="/cart"
-            className={`btn rounded-pill px-3 py-2 fw-semibold position-relative ${styles.cartButton}`}
-            aria-label={`Shopping cart with ${numCartItems} items`}
-            onClick={closeNavbar}
-          >
-            <GiShoppingCart size={20} className={styles.cartIcon} />
-            <span className="ms-2">Cart</span>
-            {numCartItems > 0 && (
-              <span
-                className={`badge position-absolute ${styles.cartBadge} ${
-                  numCartItems > 99 ? styles.cartBadgeSmall : ''
-                }`}
+          <div className={`navbar-nav ${styles.allNavItems}`}>
+            {/* Main Navigation Links */}
+            <div className={styles.navGroup}>
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `nav-link ${styles.navLink} ${isActive ? styles.active : ''}`
+                }
+                onClick={closeNavbar}
+                end
               >
-                {numCartItems > 99 ? '99+' : numCartItems}
-              </span>
-            )}
-          </Link>
+                🏠 Home
+              </NavLink>
+              <NavLink
+                to="/products"
+                className={({ isActive }) =>
+                  `nav-link ${styles.navLink} ${isActive ? styles.active : ''}`
+                }
+                onClick={closeNavbar}
+              >
+                🛍️ Shop
+              </NavLink>
+              <NavLink
+                to="/about"
+                className={({ isActive }) =>
+                  `nav-link ${styles.navLink} ${isActive ? styles.active : ''}`
+                }
+                onClick={closeNavbar}
+              >
+                ℹ️ About
+              </NavLink>
+              <NavLink
+                to="/contact"
+                className={({ isActive }) =>
+                  `nav-link ${styles.navLink} ${isActive ? styles.active : ''}`
+                }
+                onClick={closeNavbar}
+              >
+                📞 Contact
+              </NavLink>
+            </div>
+
+            {/* User Authentication Links */}
+            <div className={styles.authGroup}>
+              <NavBarLinks onLinkClick={closeNavbar} />
+            </div>
+
+            {/* Cart Button */}
+            <Link
+              to="/cart"
+              className={`btn rounded-pill px-3 py-2 fw-semibold position-relative ${styles.cartButton}`}
+              aria-label={`Shopping cart with ${numCartItems} items`}
+              onClick={closeNavbar}
+            >
+              <GiShoppingCart size={20} className={styles.cartIcon} />
+              <span className="ms-2">Cart</span>
+              {numCartItems > 0 && (
+                <span
+                  className={`badge position-absolute ${styles.cartBadge} ${
+                    numCartItems > 99 ? styles.cartBadgeSmall : ''
+                  }`}
+                >
+                  {numCartItems > 99 ? '99+' : numCartItems}
+                </span>
+              )}
+            </Link>
+          </div>
         </div>
       </div>
     </nav>

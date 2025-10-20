@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './PaymentSection.module.css';
+import api from '../../api';
 
 const PaymentSection = () => {
-  const handlePayPalPayment = () => {
-    console.log('PayPal payment initiated');
-    // Add PayPal integration logic here
-  };
-
-  const handleFlutterwavePayment = () => {
-    console.log('Flutterwave payment initiated');
-    // Add Flutterwave integration logic here
-  };
-
+  const cart_code = localStorage.getItem('cart_code');
+  const [loading, setLoading] = useState(false);
+  function makePayment() {
+    api
+      .post('initiate_payment/', { cart_code })
+      .then((response) => {
+        console.log(response.data);
+        window.location.href = response.data.data.link
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
   return (
     <div className="col-md-4">
       <div className={`card ${styles.card}`}>
@@ -26,7 +30,6 @@ const PaymentSection = () => {
           <button
             className={`btn btn-primary w-100 mb-3 ${styles.paypalButton}`}
             id="paypal-button"
-            onClick={handlePayPalPayment}
           >
             <i className="bi bi-paypal me-2"></i>
             Pay With PayPal
@@ -36,7 +39,7 @@ const PaymentSection = () => {
           <button
             className={`btn btn-warning w-100 ${styles.flutterwaveButton}`}
             id="flutterwave-button"
-            onClick={handleFlutterwavePayment}
+            onClick={makePayment}
           >
             <i className="bi bi-credit-card me-2"></i>
             Pay with Flutterwave

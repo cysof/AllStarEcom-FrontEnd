@@ -1,72 +1,68 @@
-/* User Card Styles */
+/* User Card */
 .userCard {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: none;
-  border-radius: 15px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  height: fit-content;
 }
 
 .textCenter {
   text-align: center;
 }
 
+/* Profile Image */
 .profileImage {
   width: 150px;
   height: 150px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
   object-fit: cover;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 4px solid #f0f0f0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* User Name */
 .userName {
-  font-weight: 700;
+  font-weight: 600;
+  color: #333;
   margin-bottom: 0.5rem;
-  color: white;
 }
 
+/* Edit Button */
 .editButton {
-  background: linear-gradient(135deg, #6050DC 0%, #4a3cb3 100%) !important;
-  color: white !important;
+  background-color: #1a73e8;
+  color: white;
   border: none;
-  border-radius: 25px;
   padding: 0.5rem 1.5rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(96, 80, 220, 0.3);
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
 }
 
 .editButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(96, 80, 220, 0.4);
-  background: linear-gradient(135deg, #4a3cb3 0%, #3a2d9c 100%) !important;
+  background-color: #1557b0;
+  color: white;
 }
 
 /* Card Header */
 .cardHeader {
-  background: linear-gradient(135deg, #6050DC 0%, #4a3cb3 100%) !important;
-  color: white;
-  border: none;
-  border-radius: 10px 10px 0 0 !important;
-  padding: 1rem 1.5rem;
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
+  padding: 1rem 1.25rem;
 }
 
-/* Section Styles */
+/* Section Title */
 .sectionTitle {
-  color: #6050DC;
-  font-weight: 700;
+  font-weight: 600;
+  color: #495057;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid #e9ecef;
 }
 
+/* Info Items */
 .infoItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #f8f9fa;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .infoItem:last-child {
@@ -76,86 +72,102 @@
 .infoLabel {
   font-weight: 600;
   color: #6c757d;
-  flex: 1;
+  font-size: 0.9rem;
 }
 
 .infoValue {
-  font-weight: 500;
-  color: #495057;
-  flex: 1;
-  text-align: right;
+  color: #333;
+  font-size: 0.95rem;
 }
 
+/* Status Badge */
 .statusBadge {
-  font-size: 0.75rem;
-  padding: 0.35em 0.65em;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
 /* Action Buttons */
 .actionButton {
-  border-radius: 20px;
-  font-weight: 500;
   transition: all 0.3s ease;
-  border-width: 2px;
 }
 
 .actionButton:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading Container */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: #6c757d;
+}
+
+.loadingContainer p {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
+
+/* Loading Spinner */
+.spinner {
+  display: inline-block;
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #1a73e8;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .userCard {
-    margin-bottom: 1.5rem;
-  }
-  
   .profileImage {
     width: 120px;
     height: 120px;
   }
-  
+
+  .userName {
+    font-size: 1.25rem;
+  }
+
   .infoItem {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
   }
-  
-  .infoValue {
-    text-align: left;
-  }
-  
+
   .actionButton {
     width: 100%;
     margin-bottom: 0.5rem;
   }
 }
 
-/* Animation for card entrance */
-.userCard, .card {
-  animation: slideUp 0.6s ease-out;
+/* Card animations */
+.userCard,
+.card {
+  animation: fadeIn 0.5s ease-in;
 }
 
-@keyframes slideUp {
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Hover effects */
-.card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
