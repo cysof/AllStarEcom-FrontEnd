@@ -1,17 +1,30 @@
 import React from 'react';
 import OrderHistoryItem from './OrderHistoryItem';
 
-const OrderHistoryItemContainer = () => {
+const OrderHistoryItemContainer = ({ orderitems }) => {
   return (
-    <div className="row" style={{ height: '300px', overflow: 'auto' }}>
-      <div className="col-md-12">
-        <div className="card">
-          <h5>Order History</h5>
+    <div className="container-fluid py-4">
+      <div className="row">
+        <div className="col-md-12">
+          {/* Header Card */}
+          <div className="card mb-3">
+            <div className="card-body">
+              <h5 className="mb-0">Order History</h5>
+            </div>
+          </div>
+          {/* scrollable  */}
+          <div
+            style={{
+              maxHeight: '600px',
+              overflowY: 'auto',
+              overflowX: 'hidden',
+            }}
+          >
+            {orderitems.map((item) => (
+              <OrderHistoryItem key={item.id} item={item} />
+            ))}
+          </div>
         </div>
-        <OrderHistoryItem />
-        <OrderHistoryItem />
-        <OrderHistoryItem />
-        <OrderHistoryItem />
       </div>
     </div>
   );

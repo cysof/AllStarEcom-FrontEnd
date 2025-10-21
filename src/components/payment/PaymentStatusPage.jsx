@@ -53,12 +53,12 @@ const PaymentStatusPage = ({ setNumCartItems }) => {
           {!isLoading && (
             <span>
               <Link
-                to="/orders"
+                to="/profile"
                 className="btn btn-light btn-lg px-4 py-2 mx-3"
               >
                 View Order Details
               </Link>
-              <Link to="/shop" className="btn btn-light btn-lg px-4 py-2">
+              <Link to="/" className="btn btn-light btn-lg px-4 py-2">
                 Continue Shopping
               </Link>
             </span>

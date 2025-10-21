@@ -4,8 +4,8 @@ import api from '../../api';
 import OrderHistoryItemContainer from './OrderHistoryItemContainer';
 
 const UserProfilePage = () => {
-  // Changed variable name from UserInfo to userInfo (lowercase)
   const [userInfo, setUserInfo] = useState({});
+  const [orderitems, setOrderItems] = useState([])
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -15,6 +15,7 @@ const UserProfilePage = () => {
       .then((response) => {
         console.log(response.data);
         setUserInfo(response.data);
+        setOrderItems(response.data.items)
         setLoading(false);
       })
       .catch((err) => {
@@ -40,11 +41,10 @@ const UserProfilePage = () => {
 
   return (
     <div className="container my-5">
-      {/* Profile Header */}
       <UserInfo userInfo={userInfo} />
 
       {/* Order History */}
-      <OrderHistoryItemContainer />
+      <OrderHistoryItemContainer orderitems={orderitems} />
     </div>
   );
 };
