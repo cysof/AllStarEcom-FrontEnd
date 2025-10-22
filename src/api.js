@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-export const BASE_URL = 'http://127.0.0.1:8000/';
+// export const BASE_URL = 'http://127.0.0.1:8000/';
+export const API_BASE_URL = 'https://allstarfashion-yb2ng.sevalla.app';
 
 const api = axios.create({
   baseURL: BASE_URL,
