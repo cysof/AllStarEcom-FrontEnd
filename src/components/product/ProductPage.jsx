@@ -4,7 +4,6 @@ import ProductPagePlaceHolder from './ProductPagePlaceHolder';
 import RelatedProducts from './RelatedProducts';
 import { useEffect, useState } from 'react';
 import api from '../../api';
-import { BASE_URL } from '../../api';
 import { toast } from 'react-toastify';
 
 const ProductPage = ({ setNumCartItems }) => {
@@ -112,7 +111,7 @@ const ProductPage = ({ setNumCartItems }) => {
       console.log('Item added successfully:', response.data);
       setInCart(true);
       toast.success('Product added to cart successfully');
-      setNumCartItems(currentValue => currentValue + 1)
+      setNumCartItems((currentValue) => currentValue + 1);
     } catch (err) {
       console.error('Error adding to cart:', err);
       if (err.response?.status === 500) {
@@ -179,9 +178,9 @@ const ProductPage = ({ setNumCartItems }) => {
               <img
                 className="card-img-top mb-5 mb-md-0"
                 src={
-                  product.image
-                    ? `${BASE_URL}${product.image}`
-                    : 'https://dummyimage.com/600x700/dee2e6/6c757d.jpg'
+                  product.large_image_url ||
+                  product.image_url ||
+                  'https://dummyimage.com/600x700/dee2e6/6c757d.jpg'
                 }
                 alt={product.name || 'Product image'}
                 onError={(e) => {

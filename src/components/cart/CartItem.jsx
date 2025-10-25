@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api, { BASE_URL } from '../../api';
+import api from '../../api';
 import { toast } from 'react-toastify';
 
 const CartItem = ({ item, onUpdate }) => {
@@ -38,7 +38,6 @@ const CartItem = ({ item, onUpdate }) => {
   function removeCartItem() {
     if (window.confirm('Are you sure you want to remove this item?')) {
       setLoading(true);
-
       api
         .delete(`remove_cart_item/${item.id}/`)
         .then(() => {
@@ -65,13 +64,21 @@ const CartItem = ({ item, onUpdate }) => {
         style={{ backgroundColor: '#f8f9fa', borderRadius: '8px' }}
       >
         <img
-          src={`${BASE_URL}${item.product.image}`}
+          src={
+            item.product.thumbnail_url ||
+            item.product.image_url ||
+            'https://dummyimage.com/80x80/dee2e6/6c757d.jpg'
+          }
           alt={item.product.name}
           style={{
             width: '80px',
             height: '80px',
             objectFit: 'cover',
             borderRadius: '5px',
+          }}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = 'https://dummyimage.com/80x80/dee2e6/6c757d.jpg';
           }}
         />
         <div className="ms-3 flex-grow-1">

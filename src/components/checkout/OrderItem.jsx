@@ -1,5 +1,4 @@
 import React from 'react';
-import { BASE_URL } from '../../api';
 
 const OrderItem = ({ item }) => {
   return (
@@ -9,7 +8,11 @@ const OrderItem = ({ item }) => {
     >
       <div className="d-flex align-items-center">
         <img
-          src={`${BASE_URL}/${item?.product?.image}`}
+          src={
+            item?.product?.thumbnail_url ||
+            item?.product?.image_url ||
+            'https://dummyimage.com/60x60/dee2e6/6c757d.jpg'
+          }
           alt={item?.product?.name || 'Product'}
           className="img-fluid"
           style={{
@@ -17,6 +20,10 @@ const OrderItem = ({ item }) => {
             height: '60px',
             objectFit: 'cover',
             borderRadius: '5px',
+          }}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = 'https://dummyimage.com/60x60/dee2e6/6c757d.jpg';
           }}
         />
         <div className="ms-3">
