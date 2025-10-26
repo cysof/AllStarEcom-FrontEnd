@@ -3,7 +3,7 @@ import { GiShoppingCart } from 'react-icons/gi';
 import { Link, NavLink } from 'react-router-dom';
 import NavBarLinks from './NavBarLinks';
 import styles from './NavBar.module.css';
-
+import logo from '../../assets/logo.jpeg';
 const NavBar = ({ numCartItems = 0 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
@@ -58,14 +58,18 @@ const NavBar = ({ numCartItems = 0 }) => {
       }`}
     >
       <div className="container">
-        {/* Brand - Left Side */}
+        {/* Brand - Left Side with Logo */}
         <Link
           className={`navbar-brand fw-bold fs-3 ${styles.brand}`}
           to="/"
           onClick={closeNavbar}
         >
-          <span>🌟AllStar</span>
-          <span>Fashon</span>
+          <div className={styles.brandContainer}>
+            <img src={logo} alt="Logo" className={styles.logo} />
+            <div className={styles.brandText}>
+              <span>ALLSTAR</span> <span>🌟FASHION</span>
+            </div>
+          </div>
         </Link>
 
         {/* Toggle Button */}
@@ -100,8 +104,9 @@ const NavBar = ({ numCartItems = 0 }) => {
               >
                 🏠 Home
               </NavLink>
+
               <NavLink
-                to="/products"
+                to="#shop"
                 className={({ isActive }) =>
                   `nav-link ${styles.navLink} ${isActive ? styles.active : ''}`
                 }

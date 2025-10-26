@@ -277,3 +277,92 @@
     transform: none;
   }
 }
+
+/* Brand container with logo */
+.brandContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 50%; /* Makes logo circular */
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.brand:hover .logo {
+  transform: scale(1.1) rotate(5deg);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.brandText span:first-child {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.brandText span:last-child {
+  font-size: 1rem;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+/* When navbar is scrolled, make logo slightly smaller */
+.scrolled .logo {
+  width: 40px;
+  height: 40px;
+}
+
+.scrolled .brandText span:first-child {
+  font-size: 1.2rem;
+}
+
+.scrolled .brandText span:last-child {
+  font-size: 0.95rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brandText span:first-child {
+    font-size: 1.1rem;
+  }
+
+  .brandText span:last-child {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .logo {
+    width: 35px;
+    height: 35px;
+  }
+
+  .brandContainer {
+    gap: 8px;
+  }
+
+  .brandText span:first-child {
+    font-size: 1rem;
+  }
+
+  .brandText span:last-child {
+    font-size: 0.85rem;
+  }
+}
