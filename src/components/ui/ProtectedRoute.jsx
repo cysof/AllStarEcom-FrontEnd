@@ -2,11 +2,13 @@ import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useState, useContext } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { toast } from 'react-toastify';
 import api from '../../api';
 import Spinner from './Spinner';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, requireEmailVerification = false }) => {
   const [isAuthorized, setIsAuthorized] = useState(null);
+  const [isEmailVerified, setIsEmailVerified] = useState(null);
   const location = useLocation();
   const {
     setIsAuthenticated,
@@ -15,7 +17,7 @@ const ProtectedRoute = ({ children }) => {
     isLoading: authContextLoading,
   } = useContext(AuthContext);
 
-  useEffect(function () {
+  useEffect(() => {
     auth().catch(() => setIsAuthorized(false));
   }, []);
 
@@ -27,23 +29,26 @@ const ProtectedRoute = ({ children }) => {
       });
       if (res.status === 200) {
         localStorage.setItem('access', res.data.access);
-
-        // Update AuthContext after successful token refresh
         setIsAuthenticated(true);
-
-        // Refresh username from backend using AuthContext function
         await refreshUsername();
-
         setIsAuthorized(true);
-        console.log('Token refreshed successfully');
       } else {
         setIsAuthorized(false);
         setIsAuthenticated(false);
       }
     } catch (error) {
-      console.log('Token refresh failed:', error);
       setIsAuthorized(false);
       setIsAuthenticated(false);
+    }
+  }
+
+  async function checkEmailVerification() {
+    try {
+      const response = await api.get('/account/profile/');
+      setIsEmailVerified(response.data.email_verified);
+      return response.data.email_verified;
+    } catch (error) {
+      return false;
     }
   }
 
@@ -61,34 +66,42 @@ const ProtectedRoute = ({ children }) => {
       const current_time = Date.now() / 1000;
 
       if (current_time > expiry_date) {
-        console.log('Token expired, attempting refresh...');
         await refreshToken();
       } else {
-        console.log('Token valid, authorizing access');
         setIsAuthorized(true);
         setIsAuthenticated(true);
-
-        // AuthContext's handleAuth will already set the username,
-        // but we can call refreshUsername to ensure it's current
         await refreshUsername();
+
+        if (requireEmailVerification) {
+          await checkEmailVerification();
+        }
       }
     } catch (error) {
-      console.log('Token validation failed:', error);
       setIsAuthorized(false);
       setIsAuthenticated(false);
     }
   }
 
-  // Show spinner while checking authorization or if AuthContext is still loading
   if (isAuthorized === null || authContextLoading) {
-    return <Spinner />;
+    return <Spinner loading={true} />;
   }
 
-  return isAuthorized ? (
-    children
-  ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
-  );
+  if (!isAuthorized) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (requireEmailVerification && isEmailVerified === false) {
+    toast.warning(
+      'Please verify your email address to proceed with checkout.',
+      {
+        position: 'top-right',
+        autoClose: 4000,
+      }
+    );
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 };
 
 export default ProtectedRoute;

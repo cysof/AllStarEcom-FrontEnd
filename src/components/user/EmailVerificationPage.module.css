@@ -1,0 +1,166 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 50px 40px;
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.spinnerWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.iconSuccess,
+.iconError {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.titleSuccess {
+  color: #10b981;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.titleError {
+  color: #ef4444;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.message {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.email {
+  color: #6c63ff;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.redirect {
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.button {
+  display: inline-block;
+  background-color: #6c63ff;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #5a52d5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+  color: white;
+}
+
+.buttonSecondary {
+  display: inline-block;
+  background-color: white;
+  color: #6c63ff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  border: 2px solid #6c63ff;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.buttonSecondary:hover {
+  background-color: #f0f0ff;
+  transform: translateY(-2px);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.help {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.help p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.help a {
+  color: #6c63ff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.help a:hover {
+  color: #5a52d5;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 40px 20px;
+  }
+
+  .titleSuccess,
+  .titleError {
+    font-size: 24px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .buttonSecondary {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
