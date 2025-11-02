@@ -2,43 +2,64 @@ import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import styles from './UserInfo.module.css';
-import pic from '../../assets/profilepicture.jpeg';
+import { useNavigate } from 'react-router-dom';
+import api from '../../api'; // Import your API service
 
 const UserInfo = ({ userInfo }) => {
   const { username } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [userProfile, setUserProfile] = useState({
     fullName: '',
     email: '',
     phone: '',
     memberSince: '',
     accountStatus: 'Active',
-    emailVerified: true,
+    emailVerified: false,
     lastLogin: '',
-    profileImage: '/api/placeholder/150/150',
+    profileImage: null,
   });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch user profile data
+    // Fetch actual user profile data from backend
     const fetchUserProfile = async () => {
       try {
-        // Replace with your actual API endpoint
-        // const response = await api.get('/user/profile/');
-        // const data = response.data;
+        const response = await api.get('/account/profile/');
+        const userData = response.data;
 
-        // Mock data for demonstration - replace with actual API call
-        const mockData = {
-          fullName: username || 'User',
-          email: 'user@example.com',
-          phone: '+1 (555) 123-4567',
-          memberSince: 'January 2024',
+        // Format member since date
+        const memberSince = new Date(userData.created_at).toLocaleDateString(
+          'en-US',
+          {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }
+        );
+
+        // Format last login if available
+        const lastLogin = userData.last_login
+          ? new Date(userData.last_login).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          : 'Never';
+
+        setUserProfile({
+          fullName: `${userData.first_name} ${userData.last_name}`.trim(),
+          email: userData.email,
+          phone: userData.phone || 'Not provided',
+          memberSince: memberSince,
           accountStatus: 'Active',
-          emailVerified: true,
-          lastLogin: '2 hours ago',
-          profileImage: '/api/placeholder/150/150',
-        };
+          emailVerified: userData.email_verified,
+          lastLogin: lastLogin,
+          profileImage: userData.profile_picture_url,
+        });
 
-        setUserProfile(mockData);
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching user profile:', error);
@@ -51,12 +72,11 @@ const UserInfo = ({ userInfo }) => {
   }, [username]);
 
   const handleEditProfile = () => {
-    // Navigate to edit profile page or open modal
-    toast.info('Edit profile functionality - Coming soon!');
+    navigate('/profile/edit');
   };
 
   const handleChangePassword = () => {
-    toast.info('Change password functionality - Coming soon!');
+    navigate('/change-password');
   };
 
   const handleUpdateEmail = () => {
@@ -87,11 +107,16 @@ const UserInfo = ({ userInfo }) => {
         className={`col-md-3 py-4 card ${styles.userCard} ${styles.textCenter}`}
       >
         <img
-          src={pic}
+          src={userProfile.profileImage || '/default-avatar.png'} // Use actual user image or default
           alt={`${userProfile.fullName}'s Profile`}
           className={`img-fluid rounded-circle mb-3 mx-auto ${styles.profileImage}`}
+          onError={(e) => {
+            e.target.src = '/default-avatar.png'; // Fallback if image fails to load
+          }}
         />
-        <h4 className={styles.userName}>{userInfo.first_name}</h4>
+        <h4 className={styles.userName}>
+          {userInfo.first_name} {userInfo.last_name}
+        </h4>
         <p className="text-muted">{userInfo.email}</p>
         <button
           className={`btn mt-2 ${styles.editButton}`}
@@ -115,7 +140,7 @@ const UserInfo = ({ userInfo }) => {
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>Full Name:</span>
                   <span className={styles.infoValue}>
-                    {userInfo.first_name}
+                    {userInfo.first_name} {userInfo.last_name}
                   </span>
                 </div>
                 <div className={styles.infoItem}>
@@ -124,7 +149,9 @@ const UserInfo = ({ userInfo }) => {
                 </div>
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>Phone:</span>
-                  <span className={styles.infoValue}>{userInfo.phone}</span>
+                  <span className={styles.infoValue}>
+                    {userInfo.phone || 'Not provided'}
+                  </span>
                 </div>
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>Member Since:</span>
@@ -132,6 +159,14 @@ const UserInfo = ({ userInfo }) => {
                     {userProfile.memberSince}
                   </span>
                 </div>
+                {userInfo.date_of_birth && (
+                  <div className={styles.infoItem}>
+                    <span className={styles.infoLabel}>Date of Birth:</span>
+                    <span className={styles.infoValue}>
+                      {new Date(userInfo.date_of_birth).toLocaleDateString()}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Account Details */}
@@ -157,10 +192,10 @@ const UserInfo = ({ userInfo }) => {
                   <span className={styles.infoLabel}>Email Verified:</span>
                   <span
                     className={`badge ${
-                      userProfile.emailVerified ? 'bg-success' : 'bg-danger'
+                      userInfo.email_verified ? 'bg-success' : 'bg-danger'
                     } ${styles.statusBadge}`}
                   >
-                    {userProfile.emailVerified ? 'Verified' : 'Not Verified'}
+                    {userInfo.email_verified ? 'Verified' : 'Not Verified'}
                   </span>
                 </div>
                 <div className={styles.infoItem}>
@@ -169,8 +204,31 @@ const UserInfo = ({ userInfo }) => {
                     {userProfile.lastLogin}
                   </span>
                 </div>
+                {userInfo.age && (
+                  <div className={styles.infoItem}>
+                    <span className={styles.infoLabel}>Age:</span>
+                    <span className={styles.infoValue}>
+                      {userInfo.age} years
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
+
+            {/* Address Information */}
+            {(userInfo.address || userInfo.city || userInfo.state) && (
+              <div className="row mt-3">
+                <div className="col-12">
+                  <h6 className={styles.sectionTitle}>Address Information</h6>
+                  <div className={styles.infoItem}>
+                    <span className={styles.infoLabel}>Full Address:</span>
+                    <span className={styles.infoValue}>
+                      {userInfo.get_full_address || 'Not provided'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Additional Sections */}
             <div className="row mt-3">

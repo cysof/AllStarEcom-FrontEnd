@@ -16,6 +16,8 @@ import UserProfilePage from './components/user/UserProfilePage';
 import PaymentStatusPage from './components/payment/PaymentStatusPage';
 import RegisterPage from './components/user/RegisterPage';
 import EmailVerificationPage from './components/user/EmailVerificationPage';
+import ProfileEditPage from './components/user/ProfileEditPage';
+import ChangePasswordPage from './components/user/ChangePasswordPage';
 
 const App = () => {
   const [numCartItems, setNumCartItems] = useState(0);
@@ -70,12 +72,12 @@ const App = () => {
               }
             />
             <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />;
+            <Route path="register" element={<RegisterPage />} />
             <Route
               path="verify-email/:token"
               element={<EmailVerificationPage />}
             />
-            ;
+
             <Route
               path="profile"
               element={
@@ -84,6 +86,9 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route path="/profile/edit" element={<ProfileEditPage />} />
+            <Route path="/change-password" element={<ChangePasswordPage />} />
+
             <Route path="*" element={<NotFoundPage />} />
             <Route
               path="payment-status"
