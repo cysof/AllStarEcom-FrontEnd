@@ -3,6 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 
 // Base URL for API
 export const BASE_URL = 'https://allstarfashion-yb2ng.sevalla.app';
+// export const BASE_URL = 'http://localhost:8000';
 
 // Create axios instance
 const api = axios.create({
