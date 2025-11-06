@@ -285,6 +285,7 @@ const LoginPage = () => {
 
         {/* Footer Links */}
         <div className="login-footer">
+          {/* forget password link */}
           <p>
             <a href="/forgot-password">Forgot Password?</a>
           </p>
