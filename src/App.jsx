@@ -19,6 +19,9 @@ import EmailVerificationPage from './components/user/EmailVerificationPage';
 import ProfileEditPage from './components/user/ProfileEditPage';
 import ChangePasswordPage from './components/user/ChangePasswordPage';
 
+import ForgotPasswordPage from './components/user/ForgotPasswordPage';
+
+
 const App = () => {
   const [numCartItems, setNumCartItems] = useState(0);
   const cart_code = localStorage.getItem('cart_code');
@@ -77,7 +80,7 @@ const App = () => {
               path="verify-email/:token"
               element={<EmailVerificationPage />}
             />
-
+            <Route path="forgot-password" element={<ForgotPasswordPage />} />;
             <Route
               path="profile"
               element={
@@ -88,7 +91,6 @@ const App = () => {
             />
             <Route path="/profile/edit" element={<ProfileEditPage />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
-
             <Route path="*" element={<NotFoundPage />} />
             <Route
               path="payment-status"
