@@ -282,7 +282,6 @@ const LoginPage = () => {
             )}
           </button>
         </form>
-
         {/* Footer Links */}
         <div className="login-footer">
           {/* forget password link */}
