@@ -20,6 +20,7 @@ import ProfileEditPage from './components/user/ProfileEditPage';
 import ChangePasswordPage from './components/user/ChangePasswordPage';
 
 import ForgotPasswordPage from './components/user/ForgotPasswordPage';
+import About from './components/ui/About';
 
 
 const App = () => {
@@ -80,7 +81,7 @@ const App = () => {
               path="verify-email/:token"
               element={<EmailVerificationPage />}
             />
-            <Route path="forgot-password" element={<ForgotPasswordPage />} />;
+            <Route path="forgot-password" element={<ForgotPasswordPage />} />
             <Route
               path="profile"
               element={
@@ -89,6 +90,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route path="/about" element={<About />} />
             <Route path="/profile/edit" element={<ProfileEditPage />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
             <Route path="*" element={<NotFoundPage />} />

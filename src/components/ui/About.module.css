@@ -1,0 +1,94 @@
+.about {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+}
+
+.title {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Logo Container - No background, just the logo */
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.logo {
+  max-width: 100%;
+  height: auto;
+  max-height: 300px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Story Image still has background */
+.storyImage {
+  height: 400px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.placeholderImage {
+  padding: 2rem;
+}
+
+.valueCard {
+  border: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 15px;
+}
+
+.valueCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.valueIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.ctaButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.ctaButton:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .logoContainer {
+    padding: 1rem;
+  }
+
+  .logo {
+    max-height: 200px;
+  }
+
+  .storyImage {
+    height: 250px;
+    margin-bottom: 2rem;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+}
