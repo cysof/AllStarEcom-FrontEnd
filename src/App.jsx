@@ -21,7 +21,7 @@ import ChangePasswordPage from './components/user/ChangePasswordPage';
 
 import ForgotPasswordPage from './components/user/ForgotPasswordPage';
 import About from './components/ui/About';
-
+import Contact from './components/ui/Contact';
 
 const App = () => {
   const [numCartItems, setNumCartItems] = useState(0);
@@ -82,6 +82,7 @@ const App = () => {
               element={<EmailVerificationPage />}
             />
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/contact" element={<Contact />} />
             <Route
               path="profile"
               element={
