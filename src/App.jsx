@@ -22,6 +22,7 @@ import ChangePasswordPage from './components/user/ChangePasswordPage';
 import ForgotPasswordPage from './components/user/ForgotPasswordPage';
 import About from './components/ui/About';
 import Contact from './components/ui/Contact';
+import ProductsPage from './components/product/ProductsPage';
 
 const App = () => {
   const [numCartItems, setNumCartItems] = useState(0);
@@ -95,6 +96,7 @@ const App = () => {
             <Route path="/profile/edit" element={<ProfileEditPage />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
             <Route path="*" element={<NotFoundPage />} />
+            <Route path="products" element={<ProductsPage/>} />
             <Route
               path="payment-status"
               element={<PaymentStatusPage setNumCartItems={setNumCartItems} />}
