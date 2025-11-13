@@ -6,11 +6,12 @@ const PaymentSection = () => {
   const cart_code = localStorage.getItem('cart_code');
   const [loading, setLoading] = useState(false);
   function makePayment() {
+    api;
     api
-      .post('initiate_payment/', { cart_code })
+      .post('/initiate_payment/', { cart_code })
       .then((response) => {
         console.log(response.data);
-        window.location.href = response.data.data.link
+        window.location.href = response.data.data.link;
       })
       .catch((err) => {
         console.log(err.message);

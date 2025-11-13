@@ -18,7 +18,7 @@ const CheckOutPage = () => {
           return;
         }
 
-        const response = await api.get(`get_cart?cart_code=${cartCode}`);
+        const response = await api.get(`/get_cart/?cart_code=${cartCode}`);
         setCartItems(response.data.items || []);
       } catch (err) {
         console.error('Error fetching cart:', err);
