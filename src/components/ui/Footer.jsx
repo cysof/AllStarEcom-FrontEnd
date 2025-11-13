@@ -17,7 +17,7 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="col-lg-4 col-md-6 mb-4">
             <div className={styles.brandSection}>
-              <h3 className={styles.brandTitle}>AllStar Collection</h3>
+              <h3 className={styles.brandTitle}>AllStar-Fashion</h3>
               <p className={styles.brandDescription}>
                 Premium quality products that make you stand out from the crowd.
                 Your trusted partner for exclusive collections.
@@ -47,8 +47,8 @@ const Footer = () => {
               <Link to="/" className={styles.footerLink}>
                 Home
               </Link>
-              <Link to="/shop" className={styles.footerLink}>
-                Shop
+              <Link to="/products" className={styles.footerLink}>
+                shop
               </Link>
               <Link to="/about" className={styles.footerLink}>
                 About
@@ -56,7 +56,7 @@ const Footer = () => {
               <Link to="/contact" className={styles.footerLink}>
                 Contact
               </Link>
-              <Link to="/faq" className={styles.footerLink}>
+              <Link to="#" className={styles.footerLink}>
                 FAQ
               </Link>
             </div>

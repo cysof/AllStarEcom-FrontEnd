@@ -96,7 +96,7 @@ const App = () => {
             <Route path="/profile/edit" element={<ProfileEditPage />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
             <Route path="*" element={<NotFoundPage />} />
-            <Route path="products" element={<ProductsPage/>} />
+            <Route path="products" element={<ProductsPage />} />
             <Route
               path="payment-status"
               element={<PaymentStatusPage setNumCartItems={setNumCartItems} />}
