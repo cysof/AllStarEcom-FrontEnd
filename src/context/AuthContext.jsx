@@ -24,7 +24,6 @@ export function AuthProvider({ children }) {
 
   const handleAuth = async () => {
     const token = localStorage.getItem('access');
-
     console.log('AuthContext - Checking auth...');
     console.log('Token exists:', !!token);
 
@@ -43,7 +42,6 @@ export function AuthProvider({ children }) {
 
           // Step 1: Try to fetch username from backend
           const backendUsername = await fetchUsernameFromBackend();
-
           if (backendUsername) {
             console.log('Setting username from backend:', backendUsername);
             setUsername(backendUsername);
@@ -85,7 +83,6 @@ export function AuthProvider({ children }) {
     setUserId(null);
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
-    // Note: We're no longer storing username in localStorage
   };
 
   // Refresh username from backend (can be called when username might have changed)
@@ -101,6 +98,11 @@ export function AuthProvider({ children }) {
   };
 
   useEffect(() => {
+    // 🆕 Clean up old token keys from previous implementation
+    // This ensures users with old 'access_token' keys migrate to 'access'
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+
     handleAuth();
   }, []);
 
@@ -112,8 +114,8 @@ export function AuthProvider({ children }) {
     userId,
     setUserId,
     handleAuth,
-    refreshUsername, // Export this function for components to use
-    isLoading, // Export loading state
+    refreshUsername,
+    isLoading,
   };
 
   console.log('AuthContext current state:', {
