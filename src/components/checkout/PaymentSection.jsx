@@ -3,20 +3,35 @@ import styles from './PaymentSection.module.css';
 import api from '../../api';
 
 const PaymentSection = () => {
-  const cart_code = localStorage.getItem('cart_code');
   const [loading, setLoading] = useState(false);
+
   function makePayment() {
-    api;
+    setLoading(true);
+    const cart_code = localStorage.getItem('cart_code');
+
+    // Get the access token
+    const token = localStorage.getItem('access_token');
+
     api
-      .post('/initiate_payment/', { cart_code })
+      .post(
+        '/initiate_payment/',
+        { cart_code },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         console.log(response.data);
         window.location.href = response.data.data.link;
       })
       .catch((err) => {
-        console.log(err.message);
+        console.error('Payment error:', err.response?.data || err.message);
+        setLoading(false);
       });
   }
+
   return (
     <div className="col-md-4">
       <div className={`card ${styles.card}`}>
@@ -41,9 +56,10 @@ const PaymentSection = () => {
             className={`btn btn-warning w-100 ${styles.flutterwaveButton}`}
             id="flutterwave-button"
             onClick={makePayment}
+            disabled={loading}
           >
             <i className="bi bi-credit-card me-2"></i>
-            Pay with Flutterwave
+            {loading ? 'Processing...' : 'Pay with Flutterwave'}
           </button>
         </div>
       </div>

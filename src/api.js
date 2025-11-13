@@ -13,18 +13,16 @@ const api = axios.create({
 // Add token to requests if available and valid
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access');
-
+    // Changed from 'access' to 'access_token'
+    const token = localStorage.getItem('access_token');
     if (token) {
       const decoded = jwtDecode(token);
       const expiryDate = decoded.exp;
       const currentTime = Date.now() / 1000;
-
       if (expiryDate > currentTime) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
-
     return config;
   },
   (error) => {
