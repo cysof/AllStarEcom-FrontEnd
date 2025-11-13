@@ -106,7 +106,7 @@ const NavBar = ({ numCartItems = 0 }) => {
               </NavLink>
 
               <NavLink
-                to="/shop"
+                to="/products"
                 className={({ isActive }) =>
                   `nav-link ${styles.navLink} ${isActive ? styles.active : ''}`
                 }
