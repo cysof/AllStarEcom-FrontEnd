@@ -85,6 +85,15 @@ const App = () => {
               path="verify-email/:token"
               element={<EmailVerificationPage />}
             />
+
+            <Route
+              path="/verification-success"
+              element={<VerificationSuccess />}
+            />
+            <Route
+              path="/verification-failed"
+              element={<VerificationFailed />}
+            />
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/contact" element={<Contact />} />
             <Route
@@ -103,14 +112,6 @@ const App = () => {
             <Route
               path="/reset-password/:token"
               element={<ResetPasswordPage />}
-            />
-            <Route
-              path="/verification-success"
-              element={<VerificationSuccess />}
-            />
-            <Route
-              path="/verification-failed"
-              element={<VerificationFailed />}
             />
 
             <Route
