@@ -24,6 +24,8 @@ import About from './components/ui/About';
 import Contact from './components/ui/Contact';
 import ProductsPage from './components/product/ProductsPage';
 import ResetPasswordPage from './components/user/ResetPasswordPage';
+import VerificationSuccess from './components/user/VerificationSuccess';
+import VerificationFailed from './components/user/VerificationFailed';
 
 const App = () => {
   const [numCartItems, setNumCartItems] = useState(0);
@@ -101,6 +103,14 @@ const App = () => {
             <Route
               path="/reset-password/:token"
               element={<ResetPasswordPage />}
+            />
+            <Route
+              path="/verification-success"
+              element={<VerificationSuccess />}
+            />
+            <Route
+              path="/verification-failed"
+              element={<VerificationFailed />}
             />
 
             <Route
