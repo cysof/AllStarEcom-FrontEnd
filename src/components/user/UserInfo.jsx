@@ -3,13 +3,14 @@ import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import styles from './UserInfo.module.css';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api'; // Import your API service
+import api from '../../api';
 
-const UserInfo = ({ userInfo }) => {
+const UserInfo = ({ userInfo, onRefresh }) => {
   const { username } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [userProfile, setUserProfile] = useState({
+    // ← Fixed: removed extra setIsRefreshing
     fullName: '',
     email: '',
     phone: '',
@@ -20,56 +21,75 @@ const UserInfo = ({ userInfo }) => {
     profileImage: null,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  useEffect(() => {
-    // Fetch actual user profile data from backend
-    const fetchUserProfile = async () => {
-      try {
-        const response = await api.get('/account/profile/');
-        const userData = response.data;
+  // Fetch user profile data
+  const fetchUserProfile = async () => {
+    try {
+      const response = await api.get('/account/profile/');
+      const userData = response.data;
 
-        // Format member since date
-        const memberSince = new Date(userData.created_at).toLocaleDateString(
-          'en-US',
-          {
+      // Format member since date
+      const memberSince = new Date(userData.created_at).toLocaleDateString(
+        'en-US',
+        {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }
+      );
+
+      // Format last login if available
+      const lastLogin = userData.last_login
+        ? new Date(userData.last_login).toLocaleDateString('en-US', {
             year: 'numeric',
-            month: 'long',
+            month: 'short',
             day: 'numeric',
-          }
-        );
+            hour: '2-digit',
+            minute: '2-digit',
+          })
+        : 'Never';
 
-        // Format last login if available
-        const lastLogin = userData.last_login
-          ? new Date(userData.last_login).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-            })
-          : 'Never';
+      setUserProfile({
+        fullName: `${userData.first_name} ${userData.last_name}`.trim(),
+        email: userData.email,
+        phone: userData.phone || 'Not provided',
+        memberSince: memberSince,
+        accountStatus: 'Active',
+        emailVerified: userData.email_verified,
+        lastLogin: lastLogin,
+        profileImage: userData.profile_picture_url,
+      });
 
-        setUserProfile({
-          fullName: `${userData.first_name} ${userData.last_name}`.trim(),
-          email: userData.email,
-          phone: userData.phone || 'Not provided',
-          memberSince: memberSince,
-          accountStatus: 'Active',
-          emailVerified: userData.email_verified,
-          lastLogin: lastLogin,
-          profileImage: userData.profile_picture_url,
-        });
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      toast.error('Failed to load profile data');
+      setIsLoading(false);
+    }
+  };
 
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-        toast.error('Failed to load profile data');
-        setIsLoading(false);
-      }
-    };
-
+  // Fetch on mount
+  useEffect(() => {
     fetchUserProfile();
-  }, [username]);
+  }, []);
+
+  // Manual refresh handler
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    toast.info('Refreshing profile data...');
+
+    // Call parent's refresh to update userInfo
+    if (onRefresh) {
+      await onRefresh();
+    }
+
+    // Refresh local profile data
+    await fetchUserProfile();
+
+    setIsRefreshing(false);
+    toast.success('Profile updated!');
+  };
 
   const handleEditProfile = () => {
     navigate('/profile/edit');
@@ -107,17 +127,38 @@ const UserInfo = ({ userInfo }) => {
         className={`col-md-3 py-4 card ${styles.userCard} ${styles.textCenter}`}
       >
         <img
-          src={userProfile.profileImage || '/default-avatar.png'} // Use actual user image or default
+          src={userProfile.profileImage || '/default-avatar.png'}
           alt={`${userProfile.fullName}'s Profile`}
           className={`img-fluid rounded-circle mb-3 mx-auto ${styles.profileImage}`}
           onError={(e) => {
-            e.target.src = '/default-avatar.png'; // Fallback if image fails to load
+            e.target.src = '/default-avatar.png';
           }}
         />
         <h4 className={styles.userName}>
           {userInfo.first_name} {userInfo.last_name}
         </h4>
         <p className="text-muted">{userInfo.email}</p>
+
+        {/* Refresh Button */}
+        <button
+          className="btn btn-outline-secondary btn-sm mb-2"
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          title="Refresh profile data"
+        >
+          {isRefreshing ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-1"></span>
+              Refreshing...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-arrow-clockwise me-1"></i>
+              Refresh
+            </>
+          )}
+        </button>
+
         <button
           className={`btn mt-2 ${styles.editButton}`}
           onClick={handleEditProfile}
@@ -145,13 +186,11 @@ const UserInfo = ({ userInfo }) => {
                 </div>
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>Email:</span>
-                  <span className={styles.infoValue}>{userInfo.email}</span>
+                  <span className={styles.infoValue}>{userProfile.email}</span>
                 </div>
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>Phone:</span>
-                  <span className={styles.infoValue}>
-                    {userInfo.phone || 'Not provided'}
-                  </span>
+                  <span className={styles.infoValue}>{userProfile.phone}</span>
                 </div>
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>Member Since:</span>
@@ -192,10 +231,20 @@ const UserInfo = ({ userInfo }) => {
                   <span className={styles.infoLabel}>Email Verified:</span>
                   <span
                     className={`badge ${
-                      userInfo.email_verified ? 'bg-success' : 'bg-danger'
+                      userProfile.emailVerified ? 'bg-success' : 'bg-danger'
                     } ${styles.statusBadge}`}
                   >
-                    {userInfo.email_verified ? 'Verified' : 'Not Verified'}
+                    {userProfile.emailVerified ? (
+                      <>
+                        <i className="bi bi-check-circle me-1"></i>
+                        Verified
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-x-circle me-1"></i>
+                        Not Verified
+                      </>
+                    )}
                   </span>
                 </div>
                 <div className={styles.infoItem}>

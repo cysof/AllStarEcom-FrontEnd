@@ -1,28 +1,39 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import UserInfo from './UserInfo';
 import api from '../../api';
 import OrderHistoryItemContainer from './OrderHistoryItemContainer';
 
 const UserProfilePage = () => {
   const [userInfo, setUserInfo] = useState({});
-  const [orderitems, setOrderItems] = useState([])
+  const [orderitems, setOrderItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
 
-  useEffect(() => {
+  // Function to fetch user data
+  const fetchUserData = async () => {
     setLoading(true);
-    api
-      .get('user_info')
-      .then((response) => {
-        console.log(response.data);
-        setUserInfo(response.data);
-        setOrderItems(response.data.items)
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err.message);
-        setLoading(false);
-      });
-  }, []);
+    try {
+      const response = await api.get('user_info');
+      console.log('User info fetched:', response.data);
+      setUserInfo(response.data);
+      setOrderItems(response.data.items || []);
+    } catch (err) {
+      console.error('Error fetching user info:', err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch data on mount and when coming from verification success
+  useEffect(() => {
+    fetchUserData();
+  }, [location.pathname]); // Re-fetch when navigating to this page
+
+  // Handle manual refresh
+  const handleRefresh = () => {
+    fetchUserData();
+  };
 
   if (loading) {
     return (
@@ -41,8 +52,7 @@ const UserProfilePage = () => {
 
   return (
     <div className="container my-5">
-      <UserInfo userInfo={userInfo} />
-
+      <UserInfo userInfo={userInfo} onRefresh={handleRefresh} />
       {/* Order History */}
       <OrderHistoryItemContainer orderitems={orderitems} />
     </div>
