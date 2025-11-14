@@ -24,6 +24,8 @@ import About from './components/ui/About';
 import Contact from './components/ui/Contact';
 import ProductsPage from './components/product/ProductsPage';
 import ResetPasswordPage from './components/user/ResetPasswordPage';
+import VerificationFailed from './components/user/VerificationFailed';
+import VerificationSuccess from './components/user/VerificationSuccess';
 
 
 const App = () => {
@@ -85,7 +87,15 @@ const App = () => {
               element={<EmailVerificationPage />}
             />
 
-          
+            <Route
+              path="/verification-success"
+              element={<VerificationSuccess />}
+            />
+            <Route
+              path="/verification-failed"
+              element={<VerificationFailed />}
+            />
+
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/contact" element={<Contact />} />
             <Route
