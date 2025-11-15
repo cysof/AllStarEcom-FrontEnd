@@ -1,102 +1,233 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import api from '../../api';
-import styles from './ProductsPage.module.css';
-import HomeCard from '../home/HomeCard';
+import Spinner from '../ui/Spinner';
 
 const ProductsPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [count, setCount] = useState(0);
+
+  const searchQuery = searchParams.get('search') || '';
+  const categoryFilter = searchParams.get('category') || '';
+  const sortBy = searchParams.get('sort') || '';
 
   useEffect(() => {
-    const fetchAllProducts = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await api.get('/products');
-        setProducts(response.data);
-      } catch (err) {
-        console.error('Error fetching products:', err);
-        setError('Failed to load products. Please try again later.');
-      } finally {
-        setLoading(false);
+    fetchProducts(currentPage);
+  }, [currentPage, searchQuery, categoryFilter, sortBy]);
+
+  const fetchProducts = async (page) => {
+    setLoading(true);
+    try {
+      let url = `products?page=${page}`;
+
+      if (searchQuery) {
+        url += `&search=${encodeURIComponent(searchQuery)}`;
       }
-    };
+      if (categoryFilter) {
+        url += `&category=${categoryFilter}`;
+      }
+      if (sortBy) {
+        url += `&sort=${sortBy}`;
+      }
 
-    fetchAllProducts();
-  }, []);
+      const response = await api.get(url);
 
-  const handleProductClick = (productSlug) => {
-    if (productSlug) {
-      navigate(`/products/${productSlug}`);
+      setProducts(response.data.results || []);
+      setCount(response.data.count || 0);
+      setTotalPages(Math.ceil((response.data.count || 0) / 12));
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      setProducts([]);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="container py-5">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-          <p className="mt-3">Loading products...</p>
-        </div>
-      </div>
-    );
-  }
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
-  if (error) {
-    return (
-      <div className="container py-5">
-        <div className="alert alert-danger text-center" role="alert">
-          <h4>Error Loading Products</h4>
-          <p>{error}</p>
-          <button
-            onClick={() => navigate('/')}
-            className="btn btn-primary mt-2"
-          >
-            Return to Home
-          </button>
-        </div>
-      </div>
-    );
+  const clearFilters = () => {
+    setSearchParams({});
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (e) => {
+    const newSort = e.target.value;
+    const newParams = new URLSearchParams(searchParams);
+
+    if (newSort) {
+      newParams.set('sort', newSort);
+    } else {
+      newParams.delete('sort');
+    }
+
+    setSearchParams(newParams);
+    setCurrentPage(1);
+  };
+
+  if (loading) {
+    return <Spinner loading={loading} />;
   }
 
   return (
-    <div className={styles.productsPage}>
-      <div className="container px-4 px-lg-5 py-5">
-        {/* Header Section - Same as CardContainer */}
-        <div className="text-center mb-5">
-          <h1 className={`fw-bold ${styles.pageTitle}`}>All Products</h1>
-          <p className={`lead ${styles.pageSubtitle}`}>
-            Explore our complete collection
-          </p>
+    <div className="container my-5">
+      {/* Header */}
+      <div className="row mb-4">
+        <div className="col-md-8">
+          <h2 className="fw-bold">
+            {searchQuery ? (
+              <>
+                Search Results for "
+                <span className="text-primary">{searchQuery}</span>"
+              </>
+            ) : (
+              'All Products'
+            )}
+          </h2>
+          <p className="text-muted">{count} products found</p>
         </div>
 
-        {/* Products Grid - EXACT SAME LAYOUT AS CARDCONTAINER */}
-        <div className="row justify-content-center">
-          {products.map((product) => (
-            <HomeCard
-              key={product.id}
-              product={product}
-              onProductClick={handleProductClick}
-            />
-          ))}
-        </div>
-
-        {/* Empty State */}
-        {products.length === 0 && !loading && (
-          <div className="text-center py-5">
-            <h4>No products found</h4>
-            <p className="text-muted">Check back later for new arrivals.</p>
-            <button onClick={() => navigate('/')} className="btn btn-primary">
-              Return to Home
-            </button>
+        <div className="col-md-4 text-end">
+          <div className="d-flex justify-content-end gap-2">
+            {(searchQuery || sortBy) && (
+              <button
+                className="btn btn-outline-secondary btn-sm"
+                onClick={clearFilters}
+              >
+                Clear Filters
+              </button>
+            )}
+            <select
+              className="form-select form-select-sm"
+              style={{ width: 'auto' }}
+              value={sortBy}
+              onChange={handleSortChange}
+            >
+              <option value="">Sort By</option>
+              <option value="name">Name (A-Z)</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+              <option value="newest">Newest First</option>
+            </select>
           </div>
-        )}
+        </div>
       </div>
+
+      {/* No Results */}
+      {products.length === 0 && (
+        <div className="text-center py-5">
+          <h3>No products found</h3>
+          <p className="text-muted">
+            {searchQuery
+              ? `No products match "${searchQuery}"`
+              : 'No products available'}
+          </p>
+          {searchQuery && (
+            <button className="btn btn-primary mt-3" onClick={clearFilters}>
+              View All Products
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Products Grid */}
+      {products.length > 0 && (
+        <>
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {products.map((product) => (
+              <div key={product.id} className="col">
+                <div className="card h-100 shadow-sm">
+                  <Link to={`/products/${product.slug}`}>
+                    <img
+                      src={product.image}
+                      className="card-img-top"
+                      alt={product.name}
+                      style={{ height: '250px', objectFit: 'cover' }}
+                    />
+                  </Link>
+                  <div className="card-body">
+                    <h5 className="card-title">{product.name}</h5>
+                    <p className="card-text fw-bold text-primary">
+                      ₦{product.price?.toLocaleString()}
+                    </p>
+                    <Link
+                      to={`/products/${product.slug}`}
+                      className="btn btn-primary btn-sm w-100"
+                    >
+                      View Details
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <nav className="mt-5">
+              <ul className="pagination justify-content-center">
+                <li
+                  className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                </li>
+
+                {[...Array(totalPages)].map((_, index) => {
+                  const pageNum = index + 1;
+                  if (
+                    pageNum === 1 ||
+                    pageNum === totalPages ||
+                    (pageNum >= currentPage - 2 && pageNum <= currentPage + 2)
+                  ) {
+                    return (
+                      <li
+                        key={pageNum}
+                        className={`page-item ${
+                          currentPage === pageNum ? 'active' : ''
+                        }`}
+                      >
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(pageNum)}
+                        >
+                          {pageNum}
+                        </button>
+                      </li>
+                    );
+                  }
+                  return null;
+                })}
+
+                <li
+                  className={`page-item ${
+                    currentPage === totalPages ? 'disabled' : ''
+                  }`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          )}
+        </>
+      )}
     </div>
   );
 };

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { GiShoppingCart } from 'react-icons/gi';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import NavBarLinks from './NavBarLinks';
 import styles from './NavBar.module.css';
 import logo from '../../assets/logo.jpeg';
+
 const NavBar = ({ numCartItems = 0 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   // Handle scroll effect
   useEffect(() => {
@@ -24,7 +27,6 @@ const NavBar = ({ numCartItems = 0 }) => {
     const handleRouteChange = () => {
       if (isNavbarOpen) {
         setIsNavbarOpen(false);
-        // Close Bootstrap collapse
         const collapse = document.getElementById('navbarContent');
         if (collapse && collapse.classList.contains('show')) {
           collapse.classList.remove('show');
@@ -32,7 +34,6 @@ const NavBar = ({ numCartItems = 0 }) => {
       }
     };
 
-    // Listen for route changes
     window.addEventListener('popstate', handleRouteChange);
     return () => window.removeEventListener('popstate', handleRouteChange);
   }, [isNavbarOpen]);
@@ -48,6 +49,16 @@ const NavBar = ({ numCartItems = 0 }) => {
     const collapse = document.getElementById('navbarContent');
     if (collapse && collapse.classList.contains('show')) {
       collapse.classList.remove('show');
+    }
+  };
+
+  // Handle search
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+      closeNavbar(); // Close mobile navbar after search
     }
   };
 
@@ -133,6 +144,30 @@ const NavBar = ({ numCartItems = 0 }) => {
                 📞 Contact
               </NavLink>
             </div>
+
+            {/* Search Bar - NEW */}
+            <form
+              onSubmit={handleSearch}
+              className={`d-flex ${styles.searchForm}`}
+            >
+              <div className="input-group">
+                <input
+                  type="search"
+                  className={`form-control ${styles.searchInput}`}
+                  placeholder="Search products..."
+                  aria-label="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button
+                  className={`btn ${styles.searchButton}`}
+                  type="submit"
+                  aria-label="Search"
+                >
+                  🔍
+                </button>
+              </div>
+            </form>
 
             {/* User Authentication Links */}
             <div className={styles.authGroup}>
