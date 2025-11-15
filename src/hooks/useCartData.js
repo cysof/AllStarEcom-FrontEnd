@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
 import { toast } from 'react-toastify';
+
 function useCartData() {
   const cart_code = localStorage.getItem('cart_code');
   const [cartItems, setCartItems] = useState([]);
@@ -15,6 +16,7 @@ function useCartData() {
 
   const fetchCart = async () => {
     let currentCartCode = cart_code;
+
     if (!currentCartCode) {
       currentCartCode = Math.random().toString(36).substring(2, 12);
       localStorage.setItem('cart_code', currentCartCode);
@@ -41,7 +43,6 @@ function useCartData() {
       setError(null);
     } catch (err) {
       console.error('Error fetching cart:', err);
-
       if (err.response?.status === 404) {
         setCartItems([]);
         setCartTotal(0);
