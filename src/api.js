@@ -5,9 +5,13 @@ import { jwtDecode } from 'jwt-decode';
 export const BASE_URL = 'https://allstarfashion-yb2ng.sevalla.app';
 // export const BASE_URL = 'http://localhost:8000';
 
-// Create axios instance
+// Create axios instance with default headers
 const api = axios.create({
   baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: true,
 });
 
 // Add token to requests if available and valid
@@ -15,10 +19,14 @@ api.interceptors.request.use(
   (config) => {
     console.log('🔍 Interceptor - Request to:', config.url);
 
+    // Ensure Content-Type is always set
+    if (!config.headers['Content-Type']) {
+      config.headers['Content-Type'] = 'application/json';
+    }
+
     // Check both possible keys for migration
     const token =
       localStorage.getItem('access') || localStorage.getItem('access_token');
-
     console.log('🔍 Token found:', !!token);
     console.log(
       '🔍 Token value (first 20 chars):',
@@ -30,7 +38,6 @@ api.interceptors.request.use(
         const decoded = jwtDecode(token);
         const expiryDate = decoded.exp;
         const currentTime = Date.now() / 1000;
-
         console.log(
           '🔍 Token expiry:',
           new Date(expiryDate * 1000).toISOString()
