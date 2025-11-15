@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import styles from './Footer.module.css';
+import { FaWhatsapp } from 'react-icons/fa';
 
 const Footer = () => {
   return (
@@ -88,27 +89,40 @@ const Footer = () => {
           <div className="col-lg-3 col-md-6 mb-4">
             <h4 className={styles.sectionTitle}>Connect With Us</h4>
             <div className={styles.socialLinks}>
-              <a href="#" className={styles.socialLink} aria-label="Facebook">
+              <a
+                href="https://www.facebook.com/share/17X24ZdzM2/"
+                className={styles.socialLink}
+                aria-label="Facebook"
+              >
                 <FaFacebook />
               </a>
-              <a href="#" className={styles.socialLink} aria-label="Twitter">
-                <FaTwitter />
-              </a>
-              <a href="#" className={styles.socialLink} aria-label="Instagram">
+              <a
+                href="https://instagram.com/allstarfashionglobal_limited_?igsh=MTVlOWZtM214cmFraw%3D%3D&utm_source=qr"
+                className={styles.socialLink}
+                aria-label="Instagram"
+              >
                 <FaInstagram />
               </a>
-              <a href="#" className={styles.socialLink} aria-label="LinkedIn">
-                <FaLinkedin />
+              <a
+                href="https://wa.me/c/2349069234701"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.socialLink}
+                aria-label="WhatsApp"
+              >
+                <FaWhatsapp />
               </a>
             </div>
 
             <div className={styles.contactInfo}>
               <p className={styles.contactItem}>
-                📧 hello@allstarcollection.com
+                📧 hello@allstarfashionglobal.com
               </p>
-              <p className={styles.contactItem}>📞 +1 (555) 123-4567</p>
+              <p className={styles.contactItem}>📞 +234-9069234701</p>
+              <p className={styles.contactItem}>📞 +234-8026487446</p>
+
               <p className={styles.contactItem}>
-                🏢 123 Fashion Street, Style City
+                🏢 122/124 Broad Street lagos Island
               </p>
             </div>
           </div>
@@ -116,19 +130,11 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className={styles.copyright}>
-          <div className="row align-items-center">
-            <div className="col-md-6">
-              <p className={styles.copyrightText}>
-                &copy; {new Date().getFullYear()} AllStar Collection. All rights
-                reserved.
-              </p>
-            </div>
-            <div className="col-md-6 text-md-end">
-              <div className={styles.paymentMethods}>
-                <span className={styles.paymentText}>We accept:</span>
-                <span className={styles.paymentIcons}>💳 🅰️ 🅱️ 📱</span>
-              </div>
-            </div>
+          <div className="w-100 d-flex justify-content-center">
+            <p className={`${styles.copyrightText} text-center`}>
+              &copy; {new Date().getFullYear()} AllStar-Fashion. All rights
+              reserved. Developed by <strong>CySoft Home Technologies</strong>.
+            </p>
           </div>
         </div>
       </div>
