@@ -175,7 +175,7 @@ const ProductPage = ({ setNumCartItems }) => {
               </h1>
               <div className="fs-5 mb-3">
                 <span>
-                  ${product.price ? Number(product.price).toFixed(2) : '0.00'}
+                  ₦{product.price ? Number(product.price).toFixed(2) : '0.00'}
                 </span>
               </div>
               <p className="lead">

@@ -23,7 +23,8 @@ const HomeCard = ({ product }) => {
                   alt={product.name || 'Product Image'}
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = 'https://dummyimage.com/300x300/dee2e6/6c757d.jpg';
+                    e.target.src =
+                      'https://dummyimage.com/300x300/dee2e6/6c757d.jpg';
                   }}
                 />
               </span>
@@ -35,12 +36,9 @@ const HomeCard = ({ product }) => {
           <div className={styles.cardBody}>
             <h5 className={styles.cardTitle}>{product.name}</h5>
             <div className={styles.priceContainer}>
-              <h6 className={styles.cardPrice}>${product.price}</h6>
-              <span className={styles.discountBadge}>-20%</span>
+              <h6 className={styles.cardPrice}>₦{product.price}</h6>
             </div>
-            <div className={styles.rating}>
-              ★★★★☆ <span className={styles.ratingCount}>(128)</span>
-            </div>
+            <div className={styles.rating}></div>
           </div>
         </div>
       </Link>
