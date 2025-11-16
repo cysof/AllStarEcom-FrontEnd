@@ -147,10 +147,18 @@ const ProductsPage = () => {
                   {/* 🔥 FIXED PRODUCT DETAIL LINK */}
                   <Link to={`/product-detail/${product.slug}`}>
                     <img
-                      src={product.image}
+                      src={
+                        product.image_url ||
+                        product.image ||
+                        'https://via.placeholder.com/300x300?text=No+Image'
+                      }
                       className="card-img-top"
                       alt={product.name}
                       style={{ height: '250px', objectFit: 'cover' }}
+                      onError={(e) => {
+                        e.target.src =
+                          'https://via.placeholder.com/300x300?text=No+Image';
+                      }}
                     />
                   </Link>
 
