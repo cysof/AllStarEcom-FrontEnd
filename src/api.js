@@ -19,6 +19,12 @@ api.interceptors.request.use(
   (config) => {
     console.log('🔍 Interceptor - Request to:', config.url);
 
+    // ✅ ADD TRAILING SLASH FOR DJANGO
+    if (config.url && !config.url.endsWith('/') && !config.url.includes('?')) {
+      config.url = config.url + '/';
+      console.log('✅ Added trailing slash:', config.url);
+    }
+
     // Ensure Content-Type is always set
     if (!config.headers['Content-Type']) {
       config.headers['Content-Type'] = 'application/json';
@@ -27,6 +33,7 @@ api.interceptors.request.use(
     // Check both possible keys for migration
     const token =
       localStorage.getItem('access') || localStorage.getItem('access_token');
+
     console.log('🔍 Token found:', !!token);
     console.log(
       '🔍 Token value (first 20 chars):',
@@ -38,6 +45,7 @@ api.interceptors.request.use(
         const decoded = jwtDecode(token);
         const expiryDate = decoded.exp;
         const currentTime = Date.now() / 1000;
+
         console.log(
           '🔍 Token expiry:',
           new Date(expiryDate * 1000).toISOString()
@@ -53,9 +61,15 @@ api.interceptors.request.use(
           console.log('✅ Authorization header added');
         } else {
           console.log('❌ Token expired, not adding to headers');
+          // Clean up expired tokens
+          localStorage.removeItem('access');
+          localStorage.removeItem('access_token');
         }
       } catch (error) {
         console.error('❌ Error decoding token:', error);
+        // Clean up invalid tokens
+        localStorage.removeItem('access');
+        localStorage.removeItem('access_token');
       }
     } else {
       console.log('❌ No token found in localStorage');
@@ -79,6 +93,9 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       console.error('🚫 401 Unauthorized - Token may be invalid or expired');
       console.error('Response data:', error.response.data);
+      // Clean up tokens on 401
+      localStorage.removeItem('access');
+      localStorage.removeItem('access_token');
     }
     return Promise.reject(error);
   }
