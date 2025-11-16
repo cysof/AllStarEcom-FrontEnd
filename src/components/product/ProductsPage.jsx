@@ -22,7 +22,8 @@ const ProductsPage = () => {
   const fetchProducts = async (page) => {
     setLoading(true);
     try {
-      let url = `products?page=${page}`;
+      // 🔥 FIXED URL — Added trailing slash
+      let url = `products/?page=${page}`;
 
       if (searchQuery) {
         url += `&search=${encodeURIComponent(searchQuery)}`;
@@ -143,7 +144,8 @@ const ProductsPage = () => {
             {products.map((product) => (
               <div key={product.id} className="col">
                 <div className="card h-100 shadow-sm">
-                  <Link to={`/products/${product.slug}`}>
+                  {/* 🔥 FIXED PRODUCT DETAIL LINK */}
+                  <Link to={`/product-detail/${product.slug}`}>
                     <img
                       src={product.image}
                       className="card-img-top"
@@ -151,13 +153,16 @@ const ProductsPage = () => {
                       style={{ height: '250px', objectFit: 'cover' }}
                     />
                   </Link>
+
                   <div className="card-body">
                     <h5 className="card-title">{product.name}</h5>
                     <p className="card-text fw-bold text-primary">
                       ₦{product.price?.toLocaleString()}
                     </p>
+
+                    {/* 🔥 FIXED PRODUCT DETAIL LINK */}
                     <Link
-                      to={`/products/${product.slug}`}
+                      to={`/product-detail/${product.slug}`}
                       className="btn btn-primary btn-sm w-100"
                     >
                       View Details

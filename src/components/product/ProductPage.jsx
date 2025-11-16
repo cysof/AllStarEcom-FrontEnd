@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ProductPagePlaceHolder from './ProductPagePlaceHolder';
 import RelatedProducts from './RelatedProducts';
-import { useEffect, useState } from 'react';
 import api from '../../api';
 import { toast } from 'react-toastify';
 
@@ -17,10 +16,9 @@ const ProductPage = ({ setNumCartItems }) => {
   const [addingToCart, setAddingToCart] = useState(false);
   const [checkingCart, setCheckingCart] = useState(false);
 
-  // Fetch product details first
+  // Fetch product details
   useEffect(() => {
     const fetchProduct = async () => {
-      // Validate slug
       if (!slug || slug === 'undefined' || slug === 'null') {
         setError('Invalid product URL');
         setLoading(false);
@@ -31,13 +29,10 @@ const ProductPage = ({ setNumCartItems }) => {
       setError(null);
 
       try {
-        console.log('Fetching product with slug:', slug);
-        const response = await api.get(`product-detail/${slug}`);
-        console.log('Product data received:', response.data);
+        const response = await api.get(`product-detail/${slug}/`);
         setProduct(response.data);
         setSimilarProducts(response.data.similar_products || []);
       } catch (err) {
-        console.error('Error fetching product:', err);
         if (err.response?.status === 404) {
           setError('Product not found');
         } else if (err.response?.status === 500) {
@@ -53,29 +48,19 @@ const ProductPage = ({ setNumCartItems }) => {
     fetchProduct();
   }, [slug]);
 
-  // Check if product is in cart (only after product is loaded)
+  // Check if product is in cart
   useEffect(() => {
     const checkCartStatus = async () => {
       const cart_code = localStorage.getItem('cart_code');
-
-      if (!product?.id || !cart_code) {
-        console.log('Skipping cart check - missing product.id or cart_code');
-        return;
-      }
+      if (!product?.id || !cart_code) return;
 
       setCheckingCart(true);
-
       try {
-        console.log('Checking cart status for product:', product.id);
         const response = await api.get(
           `product_in_cart?cart_code=${cart_code}&product_id=${product.id}`
         );
-        console.log('Cart status response:', response.data);
         setInCart(response.data.product_in_cart || false);
       } catch (err) {
-        console.error('Error checking cart status:', err);
-        // Don't show error to user for cart check failures
-        // Just assume product is not in cart
         setInCart(false);
       } finally {
         setCheckingCart(false);
@@ -88,12 +73,10 @@ const ProductPage = ({ setNumCartItems }) => {
   // Add item to cart
   const add_item = async () => {
     const cart_code = localStorage.getItem('cart_code');
-
     if (!cart_code) {
       alert('Cart not initialized. Please refresh the page.');
       return;
     }
-
     if (!product?.id) {
       alert('Product information not available.');
       return;
@@ -106,14 +89,11 @@ const ProductPage = ({ setNumCartItems }) => {
     };
 
     try {
-      console.log('Adding item to cart:', newItem);
-      const response = await api.post('add_item/', newItem);
-      console.log('Item added successfully:', response.data);
+      await api.post('add_item/', newItem);
       setInCart(true);
       toast.success('Product added to cart successfully');
-      setNumCartItems((currentValue) => currentValue + 1);
+      setNumCartItems((current) => current + 1);
     } catch (err) {
-      console.error('Error adding to cart:', err);
       if (err.response?.status === 500) {
         alert('Server error. Please try again later.');
       } else if (err.response?.status === 400) {
@@ -129,19 +109,18 @@ const ProductPage = ({ setNumCartItems }) => {
   // Handle similar product click
   const handleSimilarProductClick = (productSlug) => {
     if (productSlug) {
-      navigate(`/products/${productSlug}`);
+      // ✅ Fixed to match Django route
+      navigate(`/product-detail/${productSlug}`);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
-  if (loading) {
-    return <ProductPagePlaceHolder />;
-  }
+  if (loading) return <ProductPagePlaceHolder />;
 
   if (error) {
     return (
       <div className="container text-center py-5">
-        <div className="alert alert-danger" role="alert">
+        <div className="alert alert-danger">
           <h4 className="alert-heading">Error Loading Product</h4>
           <p>{error}</p>
           <hr />
@@ -156,7 +135,7 @@ const ProductPage = ({ setNumCartItems }) => {
   if (!product) {
     return (
       <div className="container text-center py-5">
-        <div className="alert alert-warning" role="alert">
+        <div className="alert alert-warning">
           <h4>Product not available</h4>
           <button
             onClick={() => navigate('/')}
@@ -184,7 +163,7 @@ const ProductPage = ({ setNumCartItems }) => {
                 }
                 alt={product.name || 'Product image'}
                 onError={(e) => {
-                  e.target.onerror = null; // Prevent infinite loop
+                  e.target.onerror = null;
                   e.target.src =
                     'https://dummyimage.com/600x700/dee2e6/6c757d.jpg';
                 }}
