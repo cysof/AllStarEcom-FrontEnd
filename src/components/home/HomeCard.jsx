@@ -6,7 +6,7 @@ import styles from './HomeCard.module.css';
 const HomeCard = ({ product }) => {
   return (
     <div className={`col-md-3 ${styles.col}`}>
-      <Link to={`/products/${product.slug}`} className={styles.link}>
+      <Link to={`/product-detail/${product.slug}`} className={styles.link}>
         <div className={styles.card}>
           <div className={styles.cardImgWrapper}>
             <div className={styles.cardImgPlaceholder}>
@@ -17,6 +17,7 @@ const HomeCard = ({ product }) => {
                     product.medium_image_url ||
                     product.thumbnail_url ||
                     product.image_url ||
+                    product.image ||
                     'https://dummyimage.com/300x300/dee2e6/6c757d.jpg'
                   }
                   className={styles.cardImgTop}
