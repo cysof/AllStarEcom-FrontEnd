@@ -40,7 +40,6 @@ const MainLayout = ({ numCartItems }) => {
     <>
       <NavBar numCartItems={numCartItems} />
       <EmailVerificationBanner user={user} />
-      <ToastContainer />
       <Outlet />
       <Footer />
     </>
