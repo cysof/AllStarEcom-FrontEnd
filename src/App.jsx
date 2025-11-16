@@ -55,25 +55,37 @@ const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <ToastContainer />
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick={true}
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable={true}
+          pauseOnHover={true}
+          theme="light"
+          limit={3}
+        />
         <Routes>
           <Route path="/" element={<MainLayout numCartItems={numCartItems} />}>
             <Route index element={<HomePage />} />
-            
+
             {/* Products List - MUST come before product detail */}
             <Route path="products" element={<ProductsPage />} />
-            
+
             {/* Product Detail - Changed path to avoid conflict */}
             <Route
               path="product-detail/:slug"
               element={<ProductPage setNumCartItems={setNumCartItems} />}
             />
-            
+
             <Route
               path="cart"
               element={<CartPage setNumCartItems={setNumCartItems} />}
             />
-            
+
             <Route
               path="checkout"
               element={
@@ -82,35 +94,35 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
-            
+
             <Route
               path="verify-email/:token"
               element={<EmailVerificationPage />}
             />
-            
+
             <Route
               path="verification-success"
               element={<VerificationSuccess />}
             />
-            
+
             <Route
               path="verification-failed"
               element={<VerificationFailed />}
             />
-            
+
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
-            
+
             <Route
               path="reset-password/:token"
               element={<ResetPasswordPage />}
             />
-            
+
             <Route path="contact" element={<Contact />} />
             <Route path="about" element={<About />} />
-            
+
             <Route
               path="profile"
               element={
@@ -119,15 +131,15 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route path="profile/edit" element={<ProfileEditPage />} />
             <Route path="change-password" element={<ChangePasswordPage />} />
-            
+
             <Route
               path="payment-status"
               element={<PaymentStatusPage setNumCartItems={setNumCartItems} />}
             />
-            
+
             {/* 404 - Must be last */}
             <Route path="*" element={<NotFoundPage />} />
           </Route>
