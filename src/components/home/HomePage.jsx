@@ -20,18 +20,20 @@ const HomePage = () => {
     const fetchProducts = async () => {
       setLoading(true);
       setError(null);
-
       try {
         const response = await api.get('products');
-        setProducts(response.data);
+        console.log('HomePage products response:', response.data); // Debug log
+
+        // 🔥 FIX: Extract the results array from paginated response
+        setProducts(response.data.results || response.data || []);
       } catch (err) {
         setError(err.message);
         console.error('Error fetching products:', err);
+        setProducts([]); // Set empty array on error
       } finally {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
