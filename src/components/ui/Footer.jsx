@@ -73,7 +73,7 @@ const Footer = () => {
               <Link to="/returns" className={styles.footerLink}>
                 Returns
               </Link>
-              <Link to="/privacy" className={styles.footerLink}>
+              <Link to="/privacy-policy" className={styles.footerLink}>
                 Privacy Policy
               </Link>
               <Link to="/terms" className={styles.footerLink}>

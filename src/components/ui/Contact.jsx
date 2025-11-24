@@ -69,7 +69,7 @@ const Contact = () => {
         {/* Header Section */}
         <div className="text-center mb-5">
           <h1 className={`display-4 fw-bold ${styles.title}`}>
-            Contact ALLSTAR 🌟FASHION
+            Contact Allstar-Fashion
           </h1>
           <p className="lead text-muted">We'd Love to Hear From You</p>
         </div>

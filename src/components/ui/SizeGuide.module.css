@@ -1,0 +1,393 @@
+/* Size Guide Container */
+.sizeGuideContainer {
+  padding: 2rem 0;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 3px solid #1a73e8;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #6c757d;
+}
+
+/* Category Tabs */
+.categoryTabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.categoryTab {
+  padding: 1rem 2rem;
+  border: 2px solid #e9ecef;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.categoryTab:hover {
+  border-color: #1a73e8;
+  color: #1a73e8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(26, 115, 232, 0.1);
+}
+
+.categoryTab.activeTab {
+  background-color: #1a73e8;
+  border-color: #1a73e8;
+  color: #fff;
+}
+
+.categoryIcon {
+  font-size: 1.5rem;
+}
+
+/* Gender Tabs */
+.genderTabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.genderTab {
+  padding: 0.75rem 2rem;
+  border: 2px solid #e9ecef;
+  background-color: #fff;
+  border-radius: 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.genderTab:hover {
+  border-color: #1a73e8;
+  color: #1a73e8;
+}
+
+.genderTab.activeGenderTab {
+  background-color: #e3f2fd;
+  border-color: #1a73e8;
+  color: #1a73e8;
+}
+
+/* Unit Toggle */
+.unitToggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.unitLabel {
+  font-size: 0.95rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.unitBtn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  background-color: #fff;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.unitBtn:hover {
+  border-color: #1a73e8;
+  color: #1a73e8;
+}
+
+.unitBtn.activeUnit {
+  background-color: #1a73e8;
+  border-color: #1a73e8;
+  color: #fff;
+}
+
+/* Chart Container */
+.chartContainer {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.tableResponsive {
+  overflow-x: auto;
+}
+
+/* Size Table */
+.sizeTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+.sizeTable thead {
+  background-color: #1a73e8;
+  color: #fff;
+}
+
+.sizeTable th {
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+  border: 1px solid #fff;
+}
+
+.sizeTable tbody tr {
+  transition: background-color 0.3s ease;
+}
+
+.sizeTable tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.sizeTable tbody tr:hover {
+  background-color: #e3f2fd;
+}
+
+.sizeTable td {
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid #dee2e6;
+  color: #495057;
+}
+
+.sizeCell {
+  font-weight: 700;
+  color: #1a73e8;
+  font-size: 1.1rem;
+}
+
+/* How to Measure Section */
+.measureSection {
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.measureCard {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #1a73e8;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.measureCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.measureTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a73e8;
+  margin-bottom: 0.75rem;
+}
+
+.measureText {
+  font-size: 0.95rem;
+  color: #495057;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Tips Section */
+.tipsSection {
+  background-color: #fff3cd;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #ffc107;
+  margin-bottom: 3rem;
+}
+
+.tipsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tipsList li {
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  color: #495057;
+  line-height: 1.6;
+}
+
+.tipsList li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #ffc107;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* Contact Section */
+.contactSection {
+  background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+  padding: 2.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  color: #fff;
+}
+
+.contactTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.contactText {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.contactButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.contactBtn {
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+}
+
+.contactBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .categoryTab {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .genderTab {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    min-width: 100px;
+  }
+
+  .chartContainer {
+    padding: 1rem;
+  }
+
+  .sizeTable th,
+  .sizeTable td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .measureCard {
+    padding: 1rem;
+  }
+
+  .contactSection {
+    padding: 1.5rem;
+  }
+
+  .contactButtons {
+    flex-direction: column;
+  }
+
+  .contactBtn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .categoryTabs {
+    flex-direction: column;
+  }
+
+  .categoryTab {
+    width: 100%;
+  }
+
+  .unitToggle {
+    flex-wrap: wrap;
+  }
+
+  .sizeTable th,
+  .sizeTable td {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Animations */
+.chartContainer,
+.measureSection,
+.tipsSection,
+.contactSection {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -25,6 +25,8 @@ import ProductsPage from './components/product/ProductsPage';
 import ResetPasswordPage from './components/user/ResetPasswordPage';
 import VerificationFailed from './components/user/VerificationFailed';
 import VerificationSuccess from './components/user/VerificationSuccess';
+import PrivacyPolicy from './components/ui/PrivacyPolicy';
+import SizeGuide from './components/ui/SizeGuide';
 
 const App = () => {
   const [numCartItems, setNumCartItems] = useState(0);
@@ -80,6 +82,8 @@ const App = () => {
               path="product-detail/:slug"
               element={<ProductPage setNumCartItems={setNumCartItems} />}
             />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/size-guide" element={<SizeGuide />} />
 
             <Route
               path="cart"

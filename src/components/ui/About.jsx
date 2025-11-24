@@ -10,7 +10,7 @@ const About = () => {
         {/* Header Section */}
         <div className="text-center mb-5">
           <h1 className={`display-4 fw-bold ${styles.title}`}>
-            About ALLSTAR 🌟FASHION
+            About Allstar-Fashion
           </h1>
           <p className="lead text-muted">Where Style Meets Excellence</p>
         </div>
@@ -113,7 +113,7 @@ const About = () => {
         <div className="text-center mt-5">
           <h3 className="mb-4">Ready to Explore Our Collection?</h3>
           <Link
-            to="/shop"
+            to="/products"
             className={`btn btn-primary btn-lg ${styles.ctaButton}`}
           >
             Start Shopping Now

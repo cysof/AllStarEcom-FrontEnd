@@ -4,7 +4,7 @@
   position: sticky;
   top: 0;
   z-index: 1020;
-  border-bottom: 3px solid #047857;
+  border-bottom: 3px solid #dc2626; /* Changed to red */
   backdrop-filter: blur(10px);
   padding: 1rem 0;
   transition: all 0.3s ease;
@@ -13,6 +13,7 @@
 .navbar.scrolled {
   padding: 0.6rem 0 !important;
   box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+  border-bottom: 3px solid #dc2626; /* Red border when scrolled */
 }
 
 .brand {
@@ -26,7 +27,7 @@
 
 .brand:hover {
   transform: scale(1.05);
-  color: #d1fae5 !important;
+  color: #fecaca !important; /* Light red on hover */
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -37,7 +38,7 @@
 }
 
 .toggler:focus {
-  box-shadow: 0 0 0 3px rgba(209, 250, 229, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(254, 202, 202, 0.5) !important; /* Light red focus */
   border-color: rgba(255, 255, 255, 0.5) !important;
 }
 
@@ -83,28 +84,28 @@
 
 .navLink:hover {
   color: white !important;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(220, 38, 38, 0.2); /* Red tint on hover */
   transform: translateY(-1px);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: rgba(220, 38, 38, 0.4); /* Red border on hover */
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
 }
 
 .navLink.active {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 255, 255, 0.15) 100%
+    rgba(220, 38, 38, 0.3) 0%, /* Red tint */
+    rgba(16, 185, 129, 0.2) 100%
   );
   color: white !important;
   font-weight: 600;
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.3);
+  border-color: rgba(220, 38, 38, 0.6); /* Red border */
+  box-shadow: 0 2px 12px rgba(220, 38, 38, 0.4); /* Red shadow */
 }
 
 /* Cart Button */
 .cartButton {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  color: #10b981;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); /* Red gradient */
+  color: white; /* White text */
   border: 2px solid rgba(255, 255, 255, 0.8);
   min-width: 100px;
   transition: all 0.3s ease;
@@ -119,11 +120,11 @@
 }
 
 .cartButton:hover {
-  background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
-  color: #059669;
-  border-color: #d1fae5;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  color: white;
+  border-color: #fecaca; /* Light red border */
+  transform: translateY(-2px); /* Slightly more lift */
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4); /* Red shadow */
 }
 
 .cartIcon {
@@ -168,6 +169,7 @@
     border-radius: 12px;
     padding: 1rem;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border: 2px solid #dc2626; /* Red border on mobile */
   }
 
   .allNavItems {
@@ -297,8 +299,8 @@
 
 .brand:hover .logo {
   transform: scale(1.1) rotate(5deg);
-  border-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-color: rgba(220, 38, 38, 0.6); /* Red border on hover */
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3); /* Red shadow */
 }
 
 .brandText {
@@ -351,7 +353,7 @@
 @media (max-width: 576px) {
   .logo {
     width: 35px;
-    height: 35px;
+  height: 35px;
   }
 
   .brandContainer {
@@ -390,8 +392,8 @@
 
 .searchInput:focus {
   background: #fff;
-  border-color: #ffc107;
-  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+  border-color: #dc2626; /* Red focus border */
+  box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25); /* Red focus shadow */
   outline: none;
 }
 
@@ -400,7 +402,7 @@
 }
 
 .searchButton {
-  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); /* Red gradient */
   color: white;
   border: none;
   font-size: 1.2rem;
@@ -409,12 +411,13 @@
 }
 
 .searchButton:hover {
-  background: linear-gradient(135deg, #ffb300 0%, #ff8c00 100%);
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
   transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3); /* Red shadow */
 }
 
 .searchButton:focus {
-  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25); /* Red focus */
 }
 
 /* Adjust layout on larger screens */
