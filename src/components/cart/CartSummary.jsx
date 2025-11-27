@@ -48,8 +48,8 @@ const CartSummary = ({ cartItems = [] }) => {
 
           <Link to="/checkout" className="text-decoration-none">
             <button
-              className="btn btn-primary w-100 py-2"
-              style={{ backgroundColor: '#6050DC', borderColor: '#6050DC' }}
+              className="btn btn-success w-100 py-2"
+              style={{ backgroundColor: '#50dc60', borderColor: '#50dc60' }}
               disabled={cartItems.length === 0}
             >
               Proceed to Checkout

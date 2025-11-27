@@ -101,7 +101,7 @@ const CartItem = ({ item, onUpdate }) => {
           className="btn btn-sm mx-2"
           onClick={updateCartItem}
           disabled={loading || quantity == item.quantity}
-          style={{ backgroundColor: '#4b3bcb', color: 'white' }}
+          style={{ backgroundColor: '#0EC71A', color: '11f559' }}
           title={
             quantity == item.quantity
               ? 'No changes to update'

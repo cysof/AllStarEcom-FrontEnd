@@ -164,7 +164,7 @@ const ProductsPage = () => {
 
                   <div className="card-body">
                     <h5 className="card-title">{product.name}</h5>
-                    <p className="card-text fw-bold text-primary">
+                    <p className="card-text fw-bold text-success">
                       ₦{product.price?.toLocaleString()}
                     </p>
 
