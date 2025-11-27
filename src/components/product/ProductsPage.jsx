@@ -171,7 +171,7 @@ const ProductsPage = () => {
                     {/* 🔥 FIXED PRODUCT DETAIL LINK */}
                     <Link
                       to={`/product-detail/${product.slug}`}
-                      className="btn btn-primary btn-sm w-100"
+                      className="btn btn-success btn-sm w-100"
                     >
                       View Details
                     </Link>
