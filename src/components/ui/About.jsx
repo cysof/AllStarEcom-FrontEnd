@@ -114,7 +114,7 @@ const About = () => {
           <h3 className="mb-4">Ready to Explore Our Collection?</h3>
           <Link
             to="/products"
-            className={`btn btn-primary btn-lg ${styles.ctaButton}`}
+            className={`btn btn-success btn-lg ${styles.ctaButton}`}
           >
             Start Shopping Now
           </Link>

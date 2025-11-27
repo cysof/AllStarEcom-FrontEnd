@@ -334,13 +334,13 @@ const Contact = () => {
           <div className={styles.ctaButtons}>
             <Link
               to="/shop"
-              className={`btn btn-primary btn-lg me-3 ${styles.ctaButton}`}
+              className={`btn btn-success btn-lg me-3 ${styles.ctaButton}`}
             >
               Continue Shopping
             </Link>
             <Link
               to="/about"
-              className={`btn btn-outline-primary btn-lg ${styles.ctaButton}`}
+              className={`btn btn-outline-success btn-lg ${styles.ctaButton}`}
             >
               Learn More About Us
             </Link>

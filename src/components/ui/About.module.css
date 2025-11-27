@@ -85,7 +85,7 @@
 }
 
 .ctaButton {
-  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  background: green(135deg, #26dc26 0%, #1cb93e 100%);
   border: none;
   padding: 12px 30px;
   border-radius: 25px;
@@ -97,8 +97,8 @@
 
 .ctaButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
-  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  /* box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4); */
+  /* background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%); */
 }
 
 /* Additional content sections */
