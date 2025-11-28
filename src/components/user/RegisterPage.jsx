@@ -430,7 +430,7 @@ const RegisterPage = () => {
 
           <button
             type="submit"
-            className="btn btn-primary w-100 mt-3"
+            className="btn btn-success w-100 mt-3"
             disabled={isLoading}
           >
             {isLoading ? (

@@ -1,0 +1,617 @@
+/* Return Policy Container */
+.returnPolicyContainer {
+  padding: 2rem 0;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+  border-radius: 1rem;
+  color: white;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+  opacity: 0.95;
+}
+
+/* Stats Container */
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.statCard {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+}
+
+.statIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #28a745;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.95rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 4rem;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(to right, #28a745, #1e7e34);
+  border-radius: 2px;
+}
+
+.sectionIntro {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #6c757d;
+  margin-bottom: 2rem;
+}
+
+/* Return Steps */
+.stepsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.stepCard {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+  border: 2px solid #e9ecef;
+}
+
+.stepCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.15);
+  border-color: #28a745;
+}
+
+.stepNumber {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.stepIcon {
+  font-size: 3rem;
+  margin: 1rem 0;
+}
+
+.stepTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.75rem;
+}
+
+.stepDescription {
+  font-size: 0.95rem;
+  color: #6c757d;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.actionCenter {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.actionBtn {
+  padding: 0.75rem 2.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.actionBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+/* Items Cards */
+.itemsCard {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 2px solid #28a745;
+  height: 100%;
+}
+
+.itemsCard.nonEligible {
+  border-color: #dc3545;
+}
+
+.itemsCardTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.checkIcon {
+  color: #28a745;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.crossIcon {
+  color: #dc3545;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.itemsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.itemListItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 1rem;
+  color: #495057;
+}
+
+.itemListItem:last-child {
+  border-bottom: none;
+}
+
+.itemIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+/* Conditions Grid */
+.conditionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.conditionCard {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2px solid #e9ecef;
+}
+
+.conditionCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  border-color: #28a745;
+}
+
+.conditionIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.conditionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.75rem;
+}
+
+.conditionText {
+  font-size: 0.95rem;
+  color: #6c757d;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Refund Card */
+.refundCard {
+  background-color: #e3f2fd;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 2px solid #1a73e8;
+}
+
+.refundHeader {
+  background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+  padding: 1.5rem;
+  color: white;
+}
+
+.refundTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.refundContent {
+  padding: 2rem;
+}
+
+.refundItem {
+  margin-bottom: 1.5rem;
+}
+
+.refundItem:last-child {
+  margin-bottom: 0;
+}
+
+.refundItem strong {
+  display: block;
+  color: #1a73e8;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.refundItem p {
+  color: #495057;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Exchange Card */
+.exchangeCard {
+  background-color: #fff3cd;
+  padding: 2.5rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  border: 2px solid #ffc107;
+}
+
+.exchangeIcon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.exchangeTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.exchangeText {
+  font-size: 1.05rem;
+  color: #495057;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.exchangeTip {
+  background-color: #ffc107;
+  color: #1a1a1a;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.exchangeTip strong {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* FAQ */
+.faqContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faqItem {
+  background-color: white;
+  border: 2px solid #e9ecef;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faqItem:hover {
+  border-color: #28a745;
+}
+
+.faqQuestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  background-color: #f8f9fa;
+  transition: background-color 0.3s ease;
+}
+
+.faqQuestion:hover {
+  background-color: #e9ecef;
+}
+
+.faqQuestionText {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  flex: 1;
+}
+
+.faqToggle {
+  font-size: 2rem;
+  color: #28a745;
+  font-weight: 300;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+.faqAnswer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 1.5rem;
+}
+
+.faqAnswer.faqActive {
+  max-height: 500px;
+  padding: 1.5rem;
+  border-top: 2px solid #e9ecef;
+}
+
+.faqAnswer p {
+  color: #495057;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Contact Section */
+.contactSection {
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+  padding: 3rem 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  color: white;
+  margin-bottom: 3rem;
+}
+
+.contactTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.contactText {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.95;
+}
+
+.contactButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.contactBtn {
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.contactBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.contactHours {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* Related Links */
+.relatedLinks {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 2px solid #e9ecef;
+}
+
+.relatedTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.linksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.relatedLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: white;
+  border: 2px solid #e9ecef;
+  border-radius: 0.5rem;
+  color: #495057;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.relatedLink:hover {
+  border-color: #28a745;
+  color: #28a745;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .statsContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stepsContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .conditionsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .contactButtons {
+    flex-direction: column;
+  }
+
+  .contactBtn {
+    width: 100%;
+  }
+
+  .linksGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .header {
+    padding: 2rem 1rem;
+  }
+
+  .statsContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .statCard {
+    padding: 1.5rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .refundContent {
+    padding: 1.5rem;
+  }
+
+  .exchangeCard {
+    padding: 1.5rem;
+  }
+
+  .faqQuestionText {
+    font-size: 1rem;
+  }
+}
+
+/* Animations */
+.section,
+.statsContainer {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

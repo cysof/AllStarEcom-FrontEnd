@@ -8,7 +8,7 @@
   text-align: center;
   margin-bottom: 3rem;
   padding-bottom: 2rem;
-  border-bottom: 3px solid #1a73e8;
+  border-bottom: 3px solid #05b405;
 }
 
 .title {
@@ -48,15 +48,15 @@
 }
 
 .categoryTab:hover {
-  border-color: #1a73e8;
-  color: #1a73e8;
+  border-color: #039e25;
+  color: #03962f;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(26, 115, 232, 0.1);
+  box-shadow: 0 4px 8px rgba(2, 167, 76, 0.1);
 }
 
 .categoryTab.activeTab {
-  background-color: #1a73e8;
-  border-color: #1a73e8;
+  background-color: #09cc23;
+  border-color: #07c246;
   color: #fff;
 }
 
@@ -79,21 +79,21 @@
   border-radius: 2rem;
   font-size: 1rem;
   font-weight: 600;
-  color: #495057;
+  color: #0f9e0a;
   cursor: pointer;
   transition: all 0.3s ease;
   min-width: 120px;
 }
 
 .genderTab:hover {
-  border-color: #1a73e8;
-  color: #1a73e8;
+  border-color: #02b128;
+  color: #08af1e;
 }
 
 .genderTab.activeGenderTab {
   background-color: #e3f2fd;
-  border-color: #1a73e8;
-  color: #1a73e8;
+  border-color: #1ae847;
+  color: #07b31e;
 }
 
 /* Unit Toggle */
@@ -107,7 +107,7 @@
 
 .unitLabel {
   font-size: 0.95rem;
-  color: #6c757d;
+  color: #02a332;
   font-weight: 500;
 }
 
@@ -118,19 +118,19 @@
   border-radius: 0.25rem;
   font-size: 0.9rem;
   font-weight: 500;
-  color: #495057;
+  color: #04a30c;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .unitBtn:hover {
-  border-color: #1a73e8;
-  color: #1a73e8;
+  border-color: #07c420;
+  color: #08d32a;
 }
 
 .unitBtn.activeUnit {
-  background-color: #1a73e8;
-  border-color: #1a73e8;
+  background-color: #03b95e;
+  border-color: #05ac29;
   color: #fff;
 }
 
@@ -138,7 +138,7 @@
 .chartContainer {
   background-color: #fff;
   border-radius: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(1, 161, 55, 0.1);
   padding: 2rem;
   margin-bottom: 3rem;
 }
@@ -155,7 +155,7 @@
 }
 
 .sizeTable thead {
-  background-color: #1a73e8;
+  background-color: #07be44;
   color: #fff;
 }
 
@@ -183,12 +183,12 @@
   padding: 1rem;
   text-align: center;
   border: 1px solid #dee2e6;
-  color: #495057;
+  color: #08af16;
 }
 
 .sizeCell {
   font-weight: 700;
-  color: #1a73e8;
+  color: #07c917;
   font-size: 1.1rem;
 }
 
@@ -209,7 +209,7 @@
   background-color: #f8f9fa;
   padding: 1.5rem;
   border-radius: 0.5rem;
-  border-left: 4px solid #1a73e8;
+  border-left: 4px solid #05b31c;
   height: 100%;
   transition: all 0.3s ease;
 }
@@ -222,7 +222,7 @@
 .measureTitle {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #1a73e8;
+  color: #07a054;
   margin-bottom: 0.75rem;
 }
 
@@ -267,7 +267,7 @@
 
 /* Contact Section */
 .contactSection {
-  background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+  background: linear-gradient(135deg, #1ae83c 0%, #05aa37 100%);
   padding: 2.5rem;
   border-radius: 0.5rem;
   text-align: center;

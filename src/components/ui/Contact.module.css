@@ -166,11 +166,7 @@
   font-weight: bold;
   text-decoration: none;
   transition: all 0.3s ease;
-  background: linear-gradient(
-    135deg,
-    #069712 0%,
-    #069712 100%
-  ); /* Red gradient */
+  background: green(135deg, #069712 0%, #069712 100%); /* Red gradient */
   color: white;
   border: 2px solid #069712;
 }
@@ -179,8 +175,8 @@
   transform: translateY(-2px);
   text-decoration: none;
   box-shadow: 0 5px 15px rgba(6, 212, 17, 0.3); /* Red shadow */
-  background: linear-gradient(135deg, #2fdf18 0%, #11bb11 100%);
-  color: white;
+  background:(135deg, #2fdf18 0%, #11bb11 100%);
+  color: rgb(40, 243, 21);
 }
 
 .ctaButton.secondary {

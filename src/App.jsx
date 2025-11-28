@@ -27,6 +27,9 @@ import VerificationFailed from './components/user/VerificationFailed';
 import VerificationSuccess from './components/user/VerificationSuccess';
 import PrivacyPolicy from './components/ui/PrivacyPolicy';
 import SizeGuide from './components/ui/SizeGuide';
+import Terms from './components/ui/Terms';
+import ReturnPolicy from './components/ui/ReturnPolicy';
+import ShippingPolicy from './components/ui/ShippingPolicy';
 
 const App = () => {
   const [numCartItems, setNumCartItems] = useState(0);
@@ -84,11 +87,15 @@ const App = () => {
             />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/size-guide" element={<SizeGuide />} />
+            <Route path="/returns" element={<ReturnPolicy />} />
+            <Route path="/shipping" element={<ShippingPolicy />} />
 
             <Route
               path="cart"
               element={<CartPage setNumCartItems={setNumCartItems} />}
             />
+
+            <Route path="/terms" element={<Terms />} />
 
             <Route
               path="checkout"

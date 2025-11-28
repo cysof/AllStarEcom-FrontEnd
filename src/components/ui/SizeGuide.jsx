@@ -340,12 +340,10 @@ const SizeGuide = () => {
               fit!
             </p>
             <div className={styles.contactButtons}>
-              <button className={`btn btn-primary ${styles.contactBtn}`}>
+              <button className={`btn btn-danger ${styles.contactBtn}`}>
                 📧 Email Us
               </button>
-              <button
-                className={`btn btn-outline-primary ${styles.contactBtn}`}
-              >
+              <button className={`btn btn-danger ${styles.contactBtn}`}>
                 💬 Live Chat
               </button>
             </div>
