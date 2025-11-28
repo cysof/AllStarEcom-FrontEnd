@@ -30,6 +30,7 @@ import SizeGuide from './components/ui/SizeGuide';
 import Terms from './components/ui/Terms';
 import ReturnPolicy from './components/ui/ReturnPolicy';
 import ShippingPolicy from './components/ui/ShippingPolicy';
+import ScrollToTop from './components/home/ScrollToTop';
 
 const App = () => {
   const [numCartItems, setNumCartItems] = useState(0);
@@ -60,6 +61,7 @@ const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <ToastContainer
           position="top-right"
           autoClose={2000}
