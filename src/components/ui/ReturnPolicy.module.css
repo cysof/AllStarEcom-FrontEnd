@@ -1,22 +1,97 @@
-/* Return Policy Container */
-.returnPolicyContainer {
-  padding: 2rem 0;
+/* ============================================
+   CSS VARIABLES FOR EASY MAINTENANCE
+   ============================================ */
+:root {
+  /* Primary Colors - Match Navbar & Shipping Policy */
+  --color-green-primary: #10b981;
+  --color-green-dark: #059669;
+  --color-green-light: #d1fae5;
+  --color-green-ultra-light: #f0fdf4;
+
+  /* Accent Colors */
+  --color-red-primary: #dc2626;
+  --color-red-dark: #b91c1c;
+  --color-red-light: #fecaca;
+
+  /* Neutral Colors */
+  --color-white: #ffffff;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-600: #6b7280;
+  --color-gray-700: #374151;
+  --color-gray-900: #111827;
+
+  /* Blue for Refund Section */
+  --color-blue-primary: #1a73e8;
+  --color-blue-dark: #0d47a1;
+  --color-blue-light: #e3f2fd;
+
+  /* Yellow for Exchange Section */
+  --color-yellow-primary: #fbbf24;
+  --color-yellow-dark: #f59e0b;
+  --color-yellow-light: #fef3c7;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 6px 20px rgba(0, 0, 0, 0.12);
+  --shadow-green: 0 4px 20px rgba(16, 185, 129, 0.25);
+  --shadow-red: 0 4px 20px rgba(220, 38, 38, 0.25);
+
+  /* Transitions */
+  --transition-base: all 0.3s ease;
 }
 
-/* Header */
+/* ============================================
+   RETURN POLICY CONTAINER
+   ============================================ */
+.returnPolicyContainer {
+  padding: 2rem 0;
+  background-color: var(--color-gray-50);
+}
+
+/* ============================================
+   HEADER - Emerald Green Gradient (Match Navbar)
+   ============================================ */
 .header {
   text-align: center;
   margin-bottom: 3rem;
-  padding: 3rem 2rem;
-  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+  padding: 3.5rem 2rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-green-primary) 0%,
+    var(--color-green-dark) 100%
+  );
   border-radius: 1rem;
-  color: white;
+  color: var(--color-white);
+  box-shadow: var(--shadow-green);
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  pointer-events: none;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2.75rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  position: relative;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .subtitle {
@@ -25,57 +100,91 @@
   max-width: 700px;
   margin: 0 auto;
   opacity: 0.95;
+  position: relative;
 }
 
-/* Stats Container */
+/* ============================================
+   STATS CONTAINER - White Cards with Green Accents
+   ============================================ */
 .statsContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
   margin-bottom: 3rem;
 }
 
 .statCard {
-  background-color: white;
+  background-color: var(--color-white);
   padding: 2rem;
   border-radius: 0.75rem;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-base);
+  border: 2px solid var(--color-gray-200);
+  position: relative;
+  overflow: hidden;
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-green-primary) 0%,
+    var(--color-green-dark) 100%
+  );
+  transform: scaleX(0);
+  transition: var(--transition-base);
 }
 
 .statCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+  box-shadow: var(--shadow-green);
+  border-color: var(--color-green-primary);
+}
+
+.statCard:hover::before {
+  transform: scaleX(1);
 }
 
 .statIcon {
   font-size: 3rem;
   margin-bottom: 1rem;
+  filter: grayscale(0.3);
 }
 
 .statValue {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #28a745;
+  color: var(--color-green-primary);
   margin-bottom: 0.5rem;
 }
 
 .statLabel {
   font-size: 0.95rem;
-  color: #6c757d;
+  color: var(--color-gray-600);
   font-weight: 500;
 }
 
-/* Sections */
+/* ============================================
+   SECTIONS - Clean Layout
+   ============================================ */
 .section {
   margin-bottom: 4rem;
+  background-color: var(--color-white);
+  padding: 3rem 2rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .sectionTitle {
   font-size: 2rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--color-gray-900);
   margin-bottom: 1rem;
   text-align: center;
   position: relative;
@@ -90,18 +199,28 @@
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background: linear-gradient(to right, #28a745, #1e7e34);
+  background: linear-gradient(
+    to right,
+    var(--color-green-primary),
+    var(--color-green-dark)
+  );
   border-radius: 2px;
 }
 
 .sectionIntro {
   text-align: center;
   font-size: 1.1rem;
-  color: #6c757d;
-  margin-bottom: 2rem;
+  color: var(--color-gray-600);
+  margin-bottom: 2.5rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
 }
 
-/* Return Steps */
+/* ============================================
+   RETURN STEPS - Numbered Cards with Green
+   ============================================ */
 .stepsContainer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -110,55 +229,66 @@
 }
 
 .stepCard {
-  background-color: white;
+  background-color: var(--color-white);
   padding: 2rem;
   border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   text-align: center;
   position: relative;
-  transition: all 0.3s ease;
-  border: 2px solid #e9ecef;
+  transition: var(--transition-base);
+  border: 2px solid var(--color-gray-200);
+  background: linear-gradient(
+    to bottom,
+    var(--color-white) 0%,
+    var(--color-green-ultra-light) 100%
+  );
 }
 
 .stepCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.15);
-  border-color: #28a745;
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-green);
+  border-color: var(--color-green-primary);
 }
 
 .stepNumber {
   position: absolute;
-  top: -15px;
+  top: -20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
-  color: white;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(
+    135deg,
+    var(--color-green-primary) 0%,
+    var(--color-green-dark) 100%
+  );
+  color: var(--color-white);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 1.2rem;
-  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+  font-size: 1.4rem;
+  box-shadow: var(--shadow-green);
+  border: 4px solid var(--color-white);
 }
 
 .stepIcon {
   font-size: 3rem;
-  margin: 1rem 0;
+  margin: 1.5rem 0 1rem;
+  filter: grayscale(0.2);
 }
 
 .stepTitle {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--color-gray-900);
   margin-bottom: 0.75rem;
 }
 
 .stepDescription {
   font-size: 0.95rem;
-  color: #6c757d;
+  color: var(--color-gray-600);
   line-height: 1.6;
   margin: 0;
 }
@@ -169,34 +299,55 @@
 }
 
 .actionBtn {
-  padding: 0.75rem 2.5rem;
+  padding: 0.875rem 2.5rem;
   font-weight: 600;
   border-radius: 0.5rem;
-  transition: all 0.3s ease;
+  transition: var(--transition-base);
+  background: linear-gradient(
+    135deg,
+    var(--color-green-primary) 0%,
+    var(--color-green-dark) 100%
+  );
+  border: none;
+  color: var(--color-white);
+  box-shadow: var(--shadow-green);
 }
 
 .actionBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, var(--color-green-dark) 0%, #047857 100%);
 }
 
-/* Items Cards */
+/* ============================================
+   ELIGIBLE / NON-ELIGIBLE ITEMS - Color Coded
+   ============================================ */
 .itemsCard {
-  background-color: #f8f9fa;
+  background-color: var(--color-white);
   padding: 2rem;
   border-radius: 0.75rem;
-  border: 2px solid #28a745;
   height: 100%;
+  border: 3px solid var(--color-green-primary);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+}
+
+.itemsCard:hover {
+  box-shadow: var(--shadow-green);
 }
 
 .itemsCard.nonEligible {
-  border-color: #dc3545;
+  border-color: var(--color-red-primary);
+}
+
+.itemsCard.nonEligible:hover {
+  box-shadow: var(--shadow-red);
 }
 
 .itemsCardTitle {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--color-gray-900);
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
@@ -204,13 +355,13 @@
 }
 
 .checkIcon {
-  color: #28a745;
+  color: var(--color-green-primary);
   font-size: 1.75rem;
   font-weight: 700;
 }
 
 .crossIcon {
-  color: #dc3545;
+  color: var(--color-red-primary);
   font-size: 1.75rem;
   font-weight: 700;
 }
@@ -225,10 +376,16 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #dee2e6;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-gray-200);
   font-size: 1rem;
-  color: #495057;
+  color: var(--color-gray-700);
+  transition: var(--transition-base);
+  border-radius: 0.25rem;
+}
+
+.itemListItem:hover {
+  background-color: var(--color-gray-50);
 }
 
 .itemListItem:last-child {
@@ -240,7 +397,9 @@
   flex-shrink: 0;
 }
 
-/* Conditions Grid */
+/* ============================================
+   CONDITIONS GRID - Clean Cards
+   ============================================ */
 .conditionsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -248,62 +407,89 @@
 }
 
 .conditionCard {
-  background-color: white;
+  background-color: var(--color-white);
   padding: 2rem;
   border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   text-align: center;
-  transition: all 0.3s ease;
-  border: 2px solid #e9ecef;
+  transition: var(--transition-base);
+  border: 2px solid var(--color-gray-200);
 }
 
 .conditionCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  border-color: #28a745;
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-green-primary);
 }
 
 .conditionIcon {
   font-size: 3rem;
   margin-bottom: 1rem;
+  filter: grayscale(0.2);
 }
 
 .conditionTitle {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--color-gray-900);
   margin-bottom: 0.75rem;
 }
 
 .conditionText {
   font-size: 0.95rem;
-  color: #6c757d;
+  color: var(--color-gray-600);
   line-height: 1.6;
   margin: 0;
 }
 
-/* Refund Card */
+/* ============================================
+   REFUND CARD - Green Theme (Match Brand)
+   ============================================ */
 .refundCard {
-  background-color: #e3f2fd;
+  background-color: var(--color-green-ultra-light);
   border-radius: 0.75rem;
   overflow: hidden;
-  border: 2px solid #1a73e8;
+  border: 2px solid var(--color-green-primary);
+  box-shadow: var(--shadow-md);
 }
 
 .refundHeader {
-  background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-green-primary) 0%,
+    var(--color-green-dark) 100%
+  );
   padding: 1.5rem;
-  color: white;
+  color: var(--color-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.refundHeader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  pointer-events: none;
 }
 
 .refundTitle {
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
+  position: relative;
 }
 
 .refundContent {
   padding: 2rem;
+  background-color: var(--color-white);
 }
 
 .refundItem {
@@ -316,24 +502,32 @@
 
 .refundItem strong {
   display: block;
-  color: #1a73e8;
+  color: var(--color-green-primary);
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 .refundItem p {
-  color: #495057;
+  color: var(--color-gray-700);
   line-height: 1.6;
   margin: 0;
 }
 
-/* Exchange Card */
+/* ============================================
+   EXCHANGE CARD - Yellow Theme (Keep Original)
+   ============================================ */
 .exchangeCard {
-  background-color: #fff3cd;
+  background: linear-gradient(
+    to bottom,
+    var(--color-white) 0%,
+    var(--color-yellow-light) 100%
+  );
   padding: 2.5rem;
   border-radius: 0.75rem;
   text-align: center;
-  border: 2px solid #ffc107;
+  border: 3px solid var(--color-yellow-primary);
+  box-shadow: var(--shadow-md);
 }
 
 .exchangeIcon {
@@ -344,13 +538,13 @@
 .exchangeTitle {
   font-size: 1.75rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--color-gray-900);
   margin-bottom: 1rem;
 }
 
 .exchangeText {
   font-size: 1.05rem;
-  color: #495057;
+  color: var(--color-gray-700);
   line-height: 1.7;
   margin-bottom: 1.5rem;
   max-width: 700px;
@@ -359,38 +553,43 @@
 }
 
 .exchangeTip {
-  background-color: #ffc107;
-  color: #1a1a1a;
-  padding: 1rem 1.5rem;
+  background-color: var(--color-yellow-primary);
+  color: var(--color-gray-900);
+  padding: 1.25rem 1.5rem;
   border-radius: 0.5rem;
   font-size: 1rem;
   line-height: 1.6;
   max-width: 600px;
   margin: 0 auto;
+  box-shadow: var(--shadow-sm);
 }
 
 .exchangeTip strong {
   display: block;
   margin-bottom: 0.5rem;
+  font-weight: 700;
 }
 
-/* FAQ */
+/* ============================================
+   FAQ - Clean Accordion Style
+   ============================================ */
 .faqContainer {
   max-width: 800px;
   margin: 0 auto;
 }
 
 .faqItem {
-  background-color: white;
-  border: 2px solid #e9ecef;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-gray-200);
   border-radius: 0.5rem;
   margin-bottom: 1rem;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: var(--transition-base);
 }
 
 .faqItem:hover {
-  border-color: #28a745;
+  border-color: var(--color-green-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .faqQuestion {
@@ -399,28 +598,33 @@
   align-items: center;
   padding: 1.5rem;
   cursor: pointer;
-  background-color: #f8f9fa;
-  transition: background-color 0.3s ease;
+  background-color: var(--color-gray-50);
+  transition: var(--transition-base);
 }
 
 .faqQuestion:hover {
-  background-color: #e9ecef;
+  background-color: var(--color-green-ultra-light);
 }
 
 .faqQuestionText {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--color-gray-900);
   margin: 0;
   flex: 1;
 }
 
 .faqToggle {
   font-size: 2rem;
-  color: #28a745;
+  color: var(--color-green-primary);
   font-weight: 300;
   margin-left: 1rem;
   flex-shrink: 0;
+  transition: var(--transition-base);
+}
+
+.faqItem:hover .faqToggle {
+  color: var(--color-green-dark);
 }
 
 .faqAnswer {
@@ -428,40 +632,68 @@
   overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
   padding: 0 1.5rem;
+  background-color: var(--color-white);
 }
 
 .faqAnswer.faqActive {
   max-height: 500px;
   padding: 1.5rem;
-  border-top: 2px solid #e9ecef;
+  border-top: 2px solid var(--color-gray-200);
 }
 
 .faqAnswer p {
-  color: #495057;
+  color: var(--color-gray-700);
   line-height: 1.7;
   margin: 0;
 }
 
-/* Contact Section */
+/* ============================================
+   CONTACT SECTION - Green Gradient (Match Navbar)
+   ============================================ */
 .contactSection {
-  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-green-primary) 0%,
+    var(--color-green-dark) 100%
+  );
   padding: 3rem 2rem;
   border-radius: 1rem;
   text-align: center;
-  color: white;
+  color: var(--color-white);
   margin-bottom: 3rem;
+  box-shadow: var(--shadow-green);
+  position: relative;
+  overflow: hidden;
+}
+
+.contactSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  pointer-events: none;
 }
 
 .contactTitle {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  position: relative;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .contactText {
   font-size: 1.1rem;
   margin-bottom: 2rem;
   opacity: 0.95;
+  position: relative;
 }
 
 .contactButtons {
@@ -470,38 +702,49 @@
   gap: 1rem;
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
+  position: relative;
 }
 
 .contactBtn {
   padding: 0.75rem 2rem;
   font-weight: 600;
   border-radius: 0.5rem;
-  transition: all 0.3s ease;
+  transition: var(--transition-base);
+  background-color: var(--color-white);
+  color: var(--color-green-primary);
+  border: 2px solid var(--color-white);
 }
 
 .contactBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+  background-color: var(--color-red-primary);
+  color: var(--color-white);
+  border-color: var(--color-red-primary);
 }
 
 .contactHours {
   font-size: 0.95rem;
   opacity: 0.9;
   margin: 0;
+  position: relative;
 }
 
-/* Related Links */
+/* ============================================
+   RELATED LINKS - Subtle Gray Section
+   ============================================ */
 .relatedLinks {
-  background-color: #f8f9fa;
+  background-color: var(--color-white);
   padding: 2rem;
   border-radius: 0.75rem;
-  border: 2px solid #e9ecef;
+  border: 2px solid var(--color-gray-200);
+  box-shadow: var(--shadow-sm);
 }
 
 .relatedTitle {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--color-gray-900);
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -518,23 +761,26 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 1rem;
-  background-color: white;
-  border: 2px solid #e9ecef;
+  background-color: var(--color-gray-50);
+  border: 2px solid var(--color-gray-200);
   border-radius: 0.5rem;
-  color: #495057;
+  color: var(--color-gray-700);
   text-decoration: none;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: var(--transition-base);
 }
 
 .relatedLink:hover {
-  border-color: #28a745;
-  color: #28a745;
+  border-color: var(--color-green-primary);
+  color: var(--color-green-primary);
+  background-color: var(--color-green-ultra-light);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Responsive Design */
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
 @media (max-width: 768px) {
   .title {
     font-size: 2rem;
@@ -566,6 +812,10 @@
 
   .linksGrid {
     grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding: 2rem 1.5rem;
   }
 }
 
@@ -599,7 +849,9 @@
   }
 }
 
-/* Animations */
+/* ============================================
+   ANIMATIONS
+   ============================================ */
 .section,
 .statsContainer {
   animation: fadeInUp 0.6s ease-out;
@@ -613,5 +865,23 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ============================================
+   ACCESSIBILITY & REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

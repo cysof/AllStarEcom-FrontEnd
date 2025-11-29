@@ -176,7 +176,7 @@ const ShippingPolicy = () => {
                 }`}
                 onClick={() => setSelectedCountry('domestic')}
               >
-                🇺🇸 Domestic Shipping
+                🏠 Domestic Shipping
               </button>
               <button
                 className={`${styles.toggleBtn} ${
