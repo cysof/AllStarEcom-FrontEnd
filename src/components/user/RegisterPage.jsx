@@ -25,8 +25,11 @@ const RegisterPage = () => {
   const [showPassword2, setShowPassword2] = useState(false);
 
   const navigate = useNavigate();
-  const { setIsAuthenticated, setUsername: setAuthUsername } =
-    useContext(AuthContext);
+  const {
+    setIsAuthenticated,
+    setUsername: setAuthUsername,
+    setUser,
+  } = useContext(AuthContext);
 
   useEffect(() => {
     const token = localStorage.getItem('access');
@@ -108,27 +111,64 @@ const RegisterPage = () => {
     setIsLoading(true);
 
     try {
+      console.log('📝 Registering user...');
       const response = await api.post('/account/register/', formData);
 
+      console.log('✅ Registration response:', response.data);
+      console.log('👤 User data:', response.data.user);
+      console.log('📧 Email verified:', response.data.user?.email_verified);
+
+      // Store tokens
       localStorage.setItem('access', response.data.tokens.access);
       localStorage.setItem('refresh', response.data.tokens.refresh);
 
-      setIsAuthenticated(true);
-      setAuthUsername(response.data.user.username);
+      // ✅ CRITICAL FIX: Store complete user data
+      const userData = response.data.user;
+      localStorage.setItem('user', JSON.stringify(userData));
 
+      console.log('💾 Tokens and user data stored in localStorage');
+
+      // Update auth context
+      setIsAuthenticated(true);
+      setAuthUsername(userData.username);
+
+      // ✅ NEW: Set the complete user object (includes email_verified: false)
+      if (setUser) {
+        setUser(userData);
+      }
+
+      console.log('✅ AuthContext updated with user data');
+
+      // Show success message with email verification reminder
       toast.success(
-        response.data.message ||
-          'Registration successful! Please check your email to verify your account.',
+        <div>
+          <strong>Registration successful!</strong>
+          <p>Please check your email to verify your account.</p>
+        </div>,
         {
           position: 'top-right',
           autoClose: 5000,
         }
       );
 
+      // ✅ Show info about email verification
+      toast.info(
+        `Verification email sent to ${userData.email}. Please check your inbox.`,
+        {
+          position: 'top-right',
+          autoClose: 7000,
+        }
+      );
+
+      console.log('🔄 Redirecting to home...');
+
       setTimeout(() => {
         navigate('/', { replace: true });
       }, 2000);
     } catch (error) {
+      console.error('❌ Registration error:', error);
+      console.error('❌ Error response:', error.response?.data);
+
       if (error.response?.data) {
         const errorData = error.response.data;
         const newErrors = {};

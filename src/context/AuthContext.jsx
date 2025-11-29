@@ -8,9 +8,24 @@ export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
   const [userId, setUserId] = useState(null);
+  const [user, setUser] = useState(null); // ✅ NEW: Store complete user object
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch username from backend API
+  // ✅ NEW: Fetch complete user profile from backend
+  const fetchUserProfile = async () => {
+    try {
+      console.log('🔄 Fetching user profile from backend...');
+      const response = await api.get('account/profile/'); // or your profile endpoint
+      console.log('✅ User profile fetched:', response.data);
+      console.log('📧 Email verified:', response.data.email_verified);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Failed to fetch user profile:', error);
+      return null;
+    }
+  };
+
+  // Fetch username from backend API (LEGACY - keeping for compatibility)
   const fetchUsernameFromBackend = async () => {
     try {
       const response = await api.get('get_username');
@@ -24,8 +39,11 @@ export function AuthProvider({ children }) {
 
   const handleAuth = async () => {
     const token = localStorage.getItem('access');
+    const storedUser = localStorage.getItem('user'); // ✅ NEW: Get stored user data
+
     console.log('AuthContext - Checking auth...');
     console.log('Token exists:', !!token);
+    console.log('Stored user exists:', !!storedUser);
 
     if (token) {
       try {
@@ -40,23 +58,54 @@ export function AuthProvider({ children }) {
           setIsAuthenticated(true);
           setUserId(decoded.user_id);
 
-          // Step 1: Try to fetch username from backend
-          const backendUsername = await fetchUsernameFromBackend();
-          if (backendUsername) {
-            console.log('Setting username from backend:', backendUsername);
-            setUsername(backendUsername);
+          // ✅ NEW: Load user data from localStorage first (faster)
+          if (storedUser) {
+            try {
+              const userData = JSON.parse(storedUser);
+              console.log('✅ Loaded user from localStorage:', userData);
+              setUser(userData);
+              setUsername(userData.username);
+
+              // ✅ Then fetch fresh data in background to ensure it's up-to-date
+              fetchUserProfile().then((freshUserData) => {
+                if (freshUserData) {
+                  console.log('✅ Updated with fresh user data');
+                  setUser(freshUserData);
+                  setUsername(freshUserData.username);
+                  localStorage.setItem('user', JSON.stringify(freshUserData));
+                }
+              });
+            } catch (error) {
+              console.error('❌ Error parsing stored user:', error);
+              // Fall back to fetching from backend
+              const userData = await fetchUserProfile();
+              if (userData) {
+                setUser(userData);
+                setUsername(userData.username);
+                localStorage.setItem('user', JSON.stringify(userData));
+              }
+            }
           } else {
-            // Step 2: Fallback to token username if backend fails
-            if (decoded.username) {
-              console.log(
-                'Setting username from token (backend failed):',
-                decoded.username
-              );
-              setUsername(decoded.username);
+            // ✅ No stored user, fetch from backend
+            console.log('📡 No stored user, fetching from backend...');
+            const userData = await fetchUserProfile();
+            if (userData) {
+              setUser(userData);
+              setUsername(userData.username);
+              localStorage.setItem('user', JSON.stringify(userData));
             } else {
-              // Step 3: Final fallback to user_id
-              console.log('Using user_id as fallback:', decoded.user_id);
-              setUsername(`User ${decoded.user_id}`);
+              // Final fallback to old method
+              const backendUsername = await fetchUsernameFromBackend();
+              if (backendUsername) {
+                console.log('Setting username from backend:', backendUsername);
+                setUsername(backendUsername);
+              } else if (decoded.username) {
+                console.log('Setting username from token:', decoded.username);
+                setUsername(decoded.username);
+              } else {
+                console.log('Using user_id as fallback:', decoded.user_id);
+                setUsername(`User ${decoded.user_id}`);
+              }
             }
           }
         } else {
@@ -76,16 +125,34 @@ export function AuthProvider({ children }) {
     setIsLoading(false);
   };
 
-  // Clear authentication data
+  // ✅ UPDATED: Clear authentication data including user object
   const clearAuth = () => {
     setIsAuthenticated(false);
     setUsername('');
     setUserId(null);
+    setUser(null); // ✅ NEW: Clear user object
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
+    localStorage.removeItem('user'); // ✅ NEW: Clear stored user data
   };
 
-  // Refresh username from backend (can be called when username might have changed)
+  // ✅ NEW: Refresh user profile (useful after email verification)
+  const refreshUserProfile = async () => {
+    if (isAuthenticated) {
+      console.log('🔄 Refreshing user profile...');
+      const userData = await fetchUserProfile();
+      if (userData) {
+        setUser(userData);
+        setUsername(userData.username);
+        localStorage.setItem('user', JSON.stringify(userData));
+        console.log('✅ User profile refreshed');
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // Refresh username from backend (LEGACY - keeping for compatibility)
   const refreshUsername = async () => {
     if (isAuthenticated) {
       const backendUsername = await fetchUsernameFromBackend();
@@ -98,8 +165,7 @@ export function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    // 🆕 Clean up old token keys from previous implementation
-    // This ensures users with old 'access_token' keys migrate to 'access'
+    // Clean up old token keys from previous implementation
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
 
@@ -113,8 +179,11 @@ export function AuthProvider({ children }) {
     setUsername,
     userId,
     setUserId,
+    user, // ✅ NEW: Expose user object
+    setUser, // ✅ NEW: Expose setUser function
     handleAuth,
     refreshUsername,
+    refreshUserProfile, // ✅ NEW: Expose refresh function
     isLoading,
   };
 
@@ -122,6 +191,8 @@ export function AuthProvider({ children }) {
     isAuthenticated,
     username,
     userId,
+    user, // ✅ NEW: Log user object
+    email_verified: user?.email_verified, // ✅ NEW: Log email_verified status
     isLoading,
   });
 

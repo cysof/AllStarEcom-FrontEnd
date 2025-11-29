@@ -16,8 +16,11 @@ const LoginPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { setIsAuthenticated, setUsername: setAuthUsername } =
-    useContext(AuthContext);
+  const {
+    setIsAuthenticated,
+    setUsername: setAuthUsername,
+    setUser,
+  } = useContext(AuthContext);
 
   // Get the redirect path from location state or default to home
   const from = location.state?.from?.pathname || '/';
@@ -66,20 +69,6 @@ const LoginPage = () => {
     return newErrors;
   };
 
-  // Fetch username from backend after successful login
-  const fetchUsername = async () => {
-    try {
-      console.log('Fetching username from backend...');
-      const response = await api.get('get_username');
-      console.log('Username response:', response.data);
-      return response.data.username;
-    } catch (error) {
-      console.error('Failed to fetch username:', error);
-      console.error('Username error details:', error.response?.data);
-      return username.trim();
-    }
-  };
-
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,53 +84,83 @@ const LoginPage = () => {
     setApiError('');
 
     try {
-      console.log('Attempting login with:', { username: username.trim() });
+      console.log('🔐 Attempting login with:', { username: username.trim() });
 
-      // Step 1: Get authentication tokens
-      const response = await api.post('token/', {
+      // ✅ FIXED: Call your custom login endpoint (not the token endpoint)
+      const response = await api.post('account/login/', {
         username: username.trim(),
         password: password,
       });
 
-      console.log('Login successful, tokens received:', response.data);
+      console.log('✅ Login response:', response.data);
+      console.log('👤 User data:', response.data.user);
+      console.log('📧 Email verified:', response.data.user?.email_verified);
 
       // Store tokens in localStorage
-      localStorage.setItem('access', response.data.access);
-      localStorage.setItem('refresh', response.data.refresh);
+      localStorage.setItem('access', response.data.tokens.access);
+      localStorage.setItem('refresh', response.data.tokens.refresh);
 
-      console.log('Tokens stored in localStorage');
+      // ✅ CRITICAL: Store user data (includes email_verified field)
+      const userData = response.data.user;
+      localStorage.setItem('user', JSON.stringify(userData));
 
-      // Step 2: Fetch actual username from backend
-      console.log('Fetching username from backend...');
-      const actualUsername = await fetchUsername();
-      console.log('Actual username:', actualUsername);
+      console.log('💾 Tokens and user data stored in localStorage');
 
-      // Step 3: Update auth context with the actual username
+      // Update auth context
       setIsAuthenticated(true);
-      setAuthUsername(actualUsername);
-      console.log('AuthContext updated');
+      setAuthUsername(userData.username);
+
+      // ✅ NEW: Set the complete user object in context
+      if (setUser) {
+        setUser(userData);
+      }
+
+      console.log('✅ AuthContext updated with user data');
 
       // Show success toast
-      toast.success('Login successful! Redirecting...', {
+      toast.success('Login successful! Welcome back!', {
         position: 'top-right',
         autoClose: 2000,
       });
 
-      console.log('Redirecting to:', from);
+      console.log('🔄 Redirecting to:', from);
 
-      // Step 4: Redirect to the intended page after short delay
+      // Redirect to the intended page after short delay
       setTimeout(() => {
         navigate(from, { replace: true });
       }, 1000);
     } catch (error) {
-      console.error('Login error details:', error);
-      console.error('Error response:', error.response);
-      console.error('Error message:', error.message);
+      console.error('❌ Login error:', error);
+      console.error('❌ Error response:', error.response?.data);
 
-      // Display error message
-      if (error.response?.status === 401) {
+      // Handle email not verified error
+      if (error.response?.data?.error === 'email_not_verified') {
+        const errorData = error.response.data;
+        setApiError(errorData.message || 'Please verify your email address');
+
+        toast.error(
+          <div>
+            <strong>Email Not Verified</strong>
+            <p>{errorData.detail}</p>
+          </div>,
+          {
+            position: 'top-right',
+            autoClose: 5000,
+          }
+        );
+        return;
+      }
+
+      // Display other error messages
+      if (error.response?.status === 401 || error.response?.status === 403) {
         setApiError('Invalid username or password');
         toast.error('Invalid username or password', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+      } else if (error.response?.data?.error) {
+        setApiError(error.response.data.error);
+        toast.error(error.response.data.error, {
           position: 'top-right',
           autoClose: 3000,
         });
@@ -282,6 +301,7 @@ const LoginPage = () => {
             )}
           </button>
         </form>
+
         {/* Footer Links */}
         <div className="login-footer">
           {/* forget password link */}
