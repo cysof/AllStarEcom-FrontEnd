@@ -8,9 +8,9 @@ const CartSummary = ({ cartItems = [] }) => {
     return total + itemTotal;
   }, 0);
 
-  const taxRate = 0.1; // 10% tax
-  const tax = subtotal * taxRate;
-  const total = subtotal + tax;
+  const vatRate = 0.075; // 7.5% VAT for Nigeria
+  const vat = subtotal * vatRate;
+  const total = subtotal + vat;
 
   // Calculate total number of items
   const totalItems = cartItems.reduce((count, item) => {
@@ -31,19 +31,22 @@ const CartSummary = ({ cartItems = [] }) => {
 
           <div className="d-flex justify-content-between mb-2">
             <span>Subtotal:</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>₦{subtotal.toFixed(2)}</span> {/* Changed $ to ₦ */}
           </div>
 
           <div className="d-flex justify-content-between mb-2">
-            <span>Tax (10%):</span>
-            <span>${tax.toFixed(2)}</span>
+            <span>VAT (7.5%):</span> {/* Changed from "Tax (10%)" */}
+            <span>₦{vat.toFixed(2)}</span> {/* Changed $ to ₦ and tax to vat */}
           </div>
 
           <hr />
 
           <div className="d-flex justify-content-between mb-3">
             <span className="fw-bold">Total:</span>
-            <strong className="text-primary fs-5">${total.toFixed(2)}</strong>
+            <strong className="text-primary fs-5">
+              ₦{total.toFixed(2)}
+            </strong>{' '}
+            {/* Changed $ to ₦ */}
           </div>
 
           <Link to="/checkout" className="text-decoration-none">
