@@ -31,7 +31,7 @@ const OrderItem = ({ item }) => {
           <small>Quantity: {item?.quantity || 1}</small>
         </div>
       </div>
-      <h6>${item?.total?.toFixed(2) || '0.00'}</h6>
+      <h6>₦{item?.total?.toFixed(2) || '0.00'}</h6> {/* Changed $ to ₦ */}
     </div>
   );
 };

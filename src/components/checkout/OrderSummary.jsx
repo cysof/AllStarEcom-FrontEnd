@@ -3,8 +3,9 @@ import OrderItem from './OrderItem';
 
 const OrderSummary = ({ cartItems = [] }) => {
   const subtotal = cartItems.reduce((acc, item) => acc + (item.total || 0), 0);
-  const tax = subtotal * 0.1;
-  const total = subtotal + tax;
+  const vatRate = 0.075; // 7.5% VAT for Nigeria
+  const vat = subtotal * vatRate;
+  const total = subtotal + vat;
 
   return (
     <div className="col-md-8">
@@ -32,17 +33,17 @@ const OrderSummary = ({ cartItems = [] }) => {
               <div className="px-3">
                 <div className="d-flex justify-content-between mb-2">
                   <span>Subtotal:</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>₦{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="d-flex justify-content-between mb-2">
-                  <span>Tax (10%):</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>VAT (7.5%):</span>
+                  <span>₦{vat.toFixed(2)}</span>
                 </div>
                 <hr />
                 <div className="d-flex justify-content-between mb-0">
                   <strong>Total:</strong>
                   <strong className="text-primary fs-5">
-                    ${total.toFixed(2)}
+                    ₦{total.toFixed(2)} {/* Removed the extra </span> */}
                   </strong>
                 </div>
               </div>
