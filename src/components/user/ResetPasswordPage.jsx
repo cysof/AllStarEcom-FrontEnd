@@ -22,7 +22,10 @@ const ResetPasswordPage = () => {
 
     setIsLoading(true);
     try {
-      await api.post('/account/reset-password/', { token, password });
+      await api.post(`/account/reset-password/${token}/`, {
+        new_password: password,
+        confirm_password: confirmPassword,
+      });
       setSuccess(true);
       toast.success('Password reset successfully!', { autoClose: 3000 });
     } catch (err) {
