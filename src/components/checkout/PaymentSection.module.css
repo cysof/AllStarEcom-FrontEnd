@@ -1,33 +1,161 @@
+/* PaymentSection.module.css */
 .card {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border: none;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.paypalButton {
-  background-color: #0070ba !important;
-  border-color: #0070ba !important;
-  font-weight: 500;
-  transition: all 0.3s ease;
+.card-header {
+  border-bottom: none;
+  padding: 1.25rem 1.5rem;
 }
 
-.paypalButton:hover {
-  background-color: #005a94 !important;
-  border-color: #005a94 !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 112, 186, 0.3);
+.card-body {
+  padding: 1.5rem;
 }
 
+/* Flutterwave Button Styles */
 .flutterwaveButton {
-  background-color: #f5a623 !important;
-  border-color: #f5a623 !important;
+  background: linear-gradient(135deg, #f5a623 0%, #f76b1c 100%) !important;
+  border: none !important;
   color: white !important;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 1rem;
   transition: all 0.3s ease;
+  padding: 1rem;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
 }
 
-.flutterwaveButton:hover {
-  background-color: #d98f1c !important;
-  border-color: #d98f1c !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(245);
+.flutterwaveButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e6971f 0%, #e6631a 100%) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(245, 166, 35, 0.4);
+}
+
+.flutterwaveButton:active:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(245, 166, 35, 0.3);
+}
+
+.flutterwaveButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.flutterwaveButton .spinner-border {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+/* Payment Amount Display */
+.amount-display {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.amount-display h3 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #6050dc;
+}
+
+.amount-display small {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+/* Status Badges */
+.badge {
+  font-size: 0.75rem;
+  padding: 0.4em 0.8em;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+.bg-warning {
+  background-color: #ffc107 !important;
+  color: #212529 !important;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.bg-secondary {
+  background-color: #6c757d !important;
+}
+
+/* Alert Styles */
+.alert {
+  border: none;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.alert-success {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.alert-info {
+  background-color: rgba(23, 162, 184, 0.1);
+  color: #0c5460;
+  border-left: 4px solid #17a2b8;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #856404;
+  border-left: 4px solid #ffc107;
+}
+
+/* Payment Instructions */
+.payment-instructions ul {
+  padding-left: 0;
+}
+
+.payment-instructions li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.payment-instructions li:last-child {
+  border-bottom: none;
+}
+
+.payment-instructions i {
+  width: 1.5rem;
+  text-align: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1.25rem;
+  }
+
+  .flutterwaveButton {
+    padding: 0.875rem;
+    font-size: 0.95rem;
+  }
+
+  .amount-display {
+    padding: 1.25rem;
+  }
 }

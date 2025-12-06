@@ -1,86 +1,204 @@
-/* Override HomeCard's built-in column classes within RelatedProducts */
-.related-product-wrapper > div[class*='col'] {
-  width: 100% !important;
-  max-width: 100% !important;
-  flex: 0 0 100% !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+/* RelatedProducts.css */
+
+.related-products-section {
+  border-top: 1px solid #e9ecef;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
 }
 
-/* Ensure the card takes full width of its container */
-.related-product-wrapper {
-  display: flex;
-  flex-direction: column;
+.related-product-col {
+  cursor: pointer;
 }
 
-/* Make the entire card more compact */
-.related-product-wrapper a {
-  display: block;
-  height: 100%;
-}
-
-/* Increase image size to dominate the card */
-.related-product-wrapper img {
-  height: 200px !important;
-  max-height: 200px !important;
-  object-fit: cover !important;
-  width: 100% !important;
-}
-
-/* Minimize card body padding */
-.related-product-wrapper > div > a > div > div:last-child {
-  padding: 0.4rem 0.5rem !important;
-}
-
-/* Make title very compact - single line */
-.related-product-wrapper h5 {
-  font-size: 0.75rem !important;
-  margin-bottom: 0.2rem !important;
-  line-height: 1.1 !important;
+.related-product-card {
+  background: white;
+  border-radius: 8px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: 600 !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+  position: relative;
 }
 
-/* Make price compact and bold */
-.related-product-wrapper h6 {
-  font-size: 0.85rem !important;
-  margin-bottom: 0 !important;
-  font-weight: 700 !important;
-  color: #2ecc71 !important;
+.related-product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border-color: #28a745;
 }
 
-/* Hide or minimize rating */
-.related-product-wrapper div[class*='rating'] {
-  font-size: 0.65rem !important;
-  margin-top: 0.1rem !important;
-  opacity: 0.8;
+.related-product-image-container {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background-color: #f8f9fa;
 }
 
-/* Make discount badge tiny */
-.related-product-wrapper span[class*='discount'],
-.related-product-wrapper span[class*='Badge'] {
-  font-size: 0.65rem !important;
-  padding: 0.1rem 0.3rem !important;
+.related-product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
-/* Reduce the overall card container shadow */
-.related-product-wrapper > div > a > div {
-  box-shadow: 0 1px 2px rgba(0,0,0,0.08) !important;
-  border-radius: 8px !important;
-  overflow: hidden !important;
+.related-product-card:hover .related-product-image {
+  transform: scale(1.05);
 }
 
-/* Make price container super compact */
-.related-product-wrapper div[class*='price'] {
-  margin-bottom: 0 !important;
+.variant-badge,
+.out-of-stock-badge {
+  position: absolute;
+  top: 10px;
+  z-index: 2;
+}
+
+.variant-badge {
+  left: 10px;
+}
+
+.out-of-stock-badge {
+  right: 10px;
+}
+
+.variant-badge .badge,
+.out-of-stock-badge .badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.related-product-info {
+  position: relative;
+  z-index: 1;
+  background: white;
+}
+
+.related-product-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.related-product-price {
+  min-height: 50px;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
 }
 
-/* Reduce card image wrapper if it has extra padding */
-.related-product-wrapper div[class*='cardImg'] {
-  margin-bottom: 0 !important;
+.related-product-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(40, 167, 69, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.related-product-card:hover .related-product-overlay {
+  opacity: 1;
+}
+
+.overlay-content {
+  color: white;
+  text-align: center;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.related-product-card:hover .overlay-content {
+  transform: translateY(0);
+}
+
+.overlay-content i {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.overlay-content span {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Badge styling */
+.badge.bg-primary {
+  background-color: #007bff !important;
+}
+
+.badge.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+/* Button hover effects */
+.related-product-card button:hover {
+  background-color: #218838 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .related-product-image-container {
+    height: 180px;
+  }
+
+  .related-product-name {
+    font-size: 0.9rem;
+    min-height: 2.8rem;
+  }
+
+  .related-product-price {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .related-product-image-container {
+    height: 160px;
+  }
+
+  .related-product-name {
+    font-size: 0.85rem;
+    min-height: 2.4rem;
+  }
+
+  .related-products-section h3 {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* Animation for loading */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.related-product-col {
+  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+}
+
+/* Staggered animation */
+.related-product-col:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.related-product-col:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.related-product-col:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.related-product-col:nth-child(4) {
+  animation-delay: 0.4s;
 }
