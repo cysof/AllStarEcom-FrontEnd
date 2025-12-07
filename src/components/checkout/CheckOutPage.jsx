@@ -1,135 +1,193 @@
+// ============================================================================
+// CheckoutPage.jsx - IMPROVED
+// Coordinates Steps 2-4: Shipping Address, Calculate Shipping, Review & Create Order
+// ============================================================================
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import OrderSummary from './OrderSummary';
-import PaymentSection from './PaymentSection';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import api from '../../api';
 import Spinner from '../ui/Spinner';
+import ShippingAddressForm from './ShippingAddressForm';
+import ShippingMethodForm from './ShippingMethodForm';
+import OrderReview from './OrderReview';
+import OrderSummarySidebar from './OrderSummarySidebar';
 
-const CheckOutPage = () => {
-  const { orderNumber } = useParams(); // Get order number from URL
+const CheckoutPage = () => {
   const navigate = useNavigate();
-
-  const [order, setOrder] = useState(null);
+  const [step, setStep] = useState(1); // 1: Address, 2: Shipping, 3: Review
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  const [paymentLoading, setPaymentLoading] = useState(false);
 
+  // Cart data
+  const [cart, setCart] = useState(null);
+  const [cartCode, setCartCode] = useState(null);
+
+  // Form data
+  const [shippingAddress, setShippingAddress] = useState({
+    first_name: '',
+    last_name: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+  });
+
+  // Shipping methods & selection (with calculated fees)
+  const [shippingMethods, setShippingMethods] = useState([]);
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
+  const [shippingFee, setShippingFee] = useState(0);
+  const [calculatingShipping, setCalculatingShipping] = useState(false);
+
+  // Initialize checkout on mount
   useEffect(() => {
-    const fetchOrder = async () => {
-      // If no order number, redirect to cart or show error
-      if (!orderNumber) {
-        setError('No order specified. Please create an order first.');
-        setLoading(false);
-        return;
-      }
-
+    const initializeCheckout = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('token');
+        setError(null);
 
-        if (!token) {
-          // User not logged in - redirect to login
-          navigate('/login?return=/checkout');
+        // Get cart code from localStorage
+        const savedCartCode = localStorage.getItem('cart_code');
+        if (!savedCartCode) {
+          setError('No cart found. Please add items to your cart first.');
+          setLoading(false);
           return;
         }
+        setCartCode(savedCartCode);
 
-        // Fetch order details from API
-        const response = await api.get(`orders/${orderNumber}/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setOrder(response.data);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching order:', err);
-
-        if (err.response?.status === 404) {
-          setError('Order not found. Please create a new order.');
-        } else if (
-          err.response?.status === 401 ||
-          err.response?.status === 403
-        ) {
-          setError('Please log in to view this order.');
-          // Optional: redirect to login
-          navigate('/login?return=/checkout');
-        } else {
-          setError('Failed to load order. Please try again.');
+        // Fetch cart data
+        const cartResponse = await api.get(
+          `get_cart/?cart_code=${savedCartCode}`
+        );
+        if (!cartResponse.data.items || cartResponse.data.items.length === 0) {
+          setError('Your cart is empty. Please add items before checking out.');
+          setLoading(false);
+          return;
         }
+        setCart(cartResponse.data);
+
+        // Fetch user data (pre-fill address form)
+        const userResponse = await api.get('user_info/');
+
+        // Pre-fill shipping address with user data if available
+        setShippingAddress({
+          first_name: userResponse.data.first_name || '',
+          last_name: userResponse.data.last_name || '',
+          phone: userResponse.data.phone || '',
+          address: userResponse.data.address || '',
+          city: userResponse.data.city || '',
+          state: userResponse.data.state || '',
+        });
+      } catch (err) {
+        console.error('Checkout initialization error:', err);
+        const errorMsg =
+          err.response?.data?.error ||
+          'Failed to load checkout. Please try again.';
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchOrder();
-  }, [orderNumber, navigate]);
+    initializeCheckout();
+  }, []);
 
-  const handlePayment = async (paymentData) => {
-    if (!orderNumber) {
-      alert('No order specified');
-      return;
-    }
-
+  // Handle address form submission (Step 1 -> Step 2)
+  const handleAddressSubmit = async (addressData) => {
     try {
-      setPaymentLoading(true);
-      const token = localStorage.getItem('token');
+      setShippingAddress(addressData);
+      setCalculatingShipping(true);
 
-      // Initiate payment for this order
-      const response = await api.post(
-        `orders/${orderNumber}/pay/`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      // Calculate shipping based on address
+      const shippingResponse = await api.post('calculate-shipping/', {
+        cart_code: cartCode,
+        state: addressData.state,
+        city: addressData.city,
+      });
+
+      console.log('🚚 Shipping calculation response:', shippingResponse.data);
+      console.log(
+        '🚚 Shipping options:',
+        shippingResponse.data.shipping_options
       );
 
-      // Redirect to Flutterwave payment page
-      if (response.data.data && response.data.data.link) {
-        window.location.href = response.data.data.link;
-      } else {
-        throw new Error('No payment link received');
-      }
+      setShippingMethods(shippingResponse.data.shipping_options || []);
+      setStep(2);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
-      console.error('Payment initiation error:', err);
+      console.error('Error calculating shipping:', err);
       const errorMsg =
         err.response?.data?.error ||
-        'Failed to initiate payment. Please try again.';
-      alert(errorMsg);
+        'Failed to calculate shipping. Please try again.';
+      toast.error(errorMsg);
     } finally {
-      setPaymentLoading(false);
+      setCalculatingShipping(false);
     }
   };
 
-  const handleCancelOrder = async () => {
-    if (!window.confirm('Are you sure you want to cancel this order?')) {
-      return;
+  // Handle shipping method selection (Step 2 -> Step 3)
+  const handleShippingMethodSelect = (methodId) => {
+    const method = shippingMethods.find((m) => m.id === methodId);
+    if (method) {
+      setSelectedShippingMethod(method);
+      setShippingFee(method.total_fee || 0);
+      setStep(3);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  };
 
+  // Go back to previous step
+  const handleBackStep = () => {
+    if (step > 1) {
+      setStep(step - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Handle order creation (Step 3 -> Step 4: Create Order)
+  const handleCheckoutSubmit = async () => {
     try {
-      setPaymentLoading(true);
-      const token = localStorage.getItem('token');
+      setSubmitting(true);
 
-      await api.post(
-        `orders/${orderNumber}/cancel/`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // Validate all required data
+      if (!cartCode) {
+        toast.error('Cart not found');
+        return;
+      }
 
-      alert('Order cancelled successfully.');
-      navigate('/orders'); // Redirect to orders page
+      if (!selectedShippingMethod) {
+        toast.error('Please select a shipping method');
+        return;
+      }
+
+      // Create order
+      const orderPayload = {
+        cart_code: cartCode,
+        shipping_address: shippingAddress,
+        shipping_method_id: selectedShippingMethod.id,
+      };
+
+      const response = await api.post('checkout/', orderPayload);
+
+      if (response.data && response.data.order_number) {
+        toast.success('Order created successfully!');
+
+        // Clear cart from localStorage
+        localStorage.removeItem('cart_code');
+
+        // Redirect to payment page with order number
+        navigate(`/order/${response.data.order_number}`);
+      } else {
+        throw new Error('No order number received');
+      }
     } catch (err) {
-      console.error('Error cancelling order:', err);
-      const errorMsg = err.response?.data?.error || 'Failed to cancel order.';
-      alert(errorMsg);
+      console.error('Checkout error:', err);
+      const errorMsg =
+        err.response?.data?.error ||
+        'Failed to create order. Please try again.';
+      toast.error(errorMsg);
     } finally {
-      setPaymentLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -143,20 +201,14 @@ const CheckOutPage = () => {
     return (
       <div className="container my-5 py-5">
         <div className="alert alert-danger" role="alert">
-          <h4 className="alert-heading">Error</h4>
+          <h4 className="alert-heading">Checkout Error</h4>
           <p>{error}</p>
           <div className="mt-3">
             <button
               onClick={() => navigate('/cart')}
-              className="btn btn-primary me-2"
+              className="btn btn-primary"
             >
               Back to Cart
-            </button>
-            <button
-              onClick={() => navigate('/orders')}
-              className="btn btn-outline-secondary"
-            >
-              View Orders
             </button>
           </div>
         </div>
@@ -164,13 +216,13 @@ const CheckOutPage = () => {
     );
   }
 
-  // No order data
-  if (!order) {
+  // No cart data
+  if (!cart) {
     return (
       <div className="container my-5 py-5">
         <div className="alert alert-warning" role="alert">
-          <h4 className="alert-heading">No Order Data</h4>
-          <p>Unable to load order details.</p>
+          <h4 className="alert-heading">No Cart Data</h4>
+          <p>Unable to load your cart. Please try again.</p>
           <button
             onClick={() => navigate('/cart')}
             className="btn btn-primary mt-2"
@@ -183,51 +235,83 @@ const CheckOutPage = () => {
   }
 
   return (
-    <div className="container my-3 py-4">
-      {/* Order Header */}
+    <div className="container my-4 py-4">
+      {/* Checkout Header */}
       <div className="mb-4">
-        <h2 className="mb-2">Order #{order.order_number}</h2>
-        <div className="d-flex align-items-center gap-3">
-          <span
-            className={`badge ${
-              order.status === 'pending'
-                ? 'bg-warning'
-                : order.status === 'processing'
-                ? 'bg-info'
-                : order.status === 'paid'
-                ? 'bg-success'
-                : 'bg-secondary'
-            }`}
+        <h2 className="mb-3">Checkout</h2>
+        <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div className="d-flex gap-2">
+            <div
+              className={`badge ${step >= 1 ? 'bg-primary' : 'bg-secondary'}`}
+            >
+              1. Address
+            </div>
+            <div
+              className={`badge ${step >= 2 ? 'bg-primary' : 'bg-secondary'}`}
+            >
+              2. Shipping
+            </div>
+            <div
+              className={`badge ${step >= 3 ? 'bg-primary' : 'bg-secondary'}`}
+            >
+              3. Review
+            </div>
+          </div>
+          <button
+            onClick={() => navigate('/cart')}
+            className="btn btn-outline-secondary btn-sm"
           >
-            {order.status.toUpperCase()}
-          </span>
-          <small className="text-muted">
-            Created: {new Date(order.created_at).toLocaleDateString()}
-          </small>
+            <i className="bi bi-arrow-left me-1"></i>
+            Back to Cart
+          </button>
         </div>
       </div>
 
       <div className="row">
-        {/* Order Summary - Updated to use order data */}
-        <div className="col-lg-8 mb-4">
-          <OrderSummary
-            order={order}
-            onCancel={handleCancelOrder}
-            canCancel={
-              order.status === 'pending' || order.status === 'payment_failed'
-            }
-          />
+        {/* Main Content */}
+        <div className="col-lg-8">
+          {/* Step 1: Shipping Address */}
+          {step === 1 && (
+            <ShippingAddressForm
+              initialData={shippingAddress}
+              onSubmit={handleAddressSubmit}
+              loading={calculatingShipping}
+            />
+          )}
+
+          {/* Step 2: Shipping Method */}
+          {step === 2 && (
+            <ShippingMethodForm
+              methods={shippingMethods}
+              address={shippingAddress}
+              selectedMethod={selectedShippingMethod}
+              onSelect={handleShippingMethodSelect}
+              onBack={handleBackStep}
+              loading={submitting}
+            />
+          )}
+
+          {/* Step 3: Review Order */}
+          {step === 3 && (
+            <OrderReview
+              cart={cart}
+              shippingAddress={shippingAddress}
+              shippingMethod={selectedShippingMethod}
+              shippingFee={shippingFee}
+              onSubmit={handleCheckoutSubmit}
+              onBack={handleBackStep}
+              loading={submitting}
+            />
+          )}
         </div>
 
-        {/* Payment Section - Updated for order payment */}
+        {/* Order Summary Sidebar */}
         <div className="col-lg-4">
-          <PaymentSection
-            onSubmit={handlePayment}
-            loading={paymentLoading}
-            order={order}
-            canPay={
-              order.status === 'pending' || order.status === 'payment_failed'
-            }
+          <OrderSummarySidebar
+            cart={cart}
+            shippingFee={shippingFee}
+            currentStep={step}
+            shippingAddress={shippingAddress}
           />
         </div>
       </div>
@@ -235,4 +319,4 @@ const CheckOutPage = () => {
   );
 };
 
-export default CheckOutPage;
+export default CheckoutPage;

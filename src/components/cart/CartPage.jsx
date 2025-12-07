@@ -5,7 +5,6 @@ import CartSummary from './CartSummary';
 import Spinner from '../ui/Spinner';
 
 const CartPage = ({ setNumCartItems }) => {
-  // Destructure all the new values from useCartData hook
   const {
     cartItems,
     cartTotal,
@@ -34,7 +33,7 @@ const CartPage = ({ setNumCartItems }) => {
     return (
       <div className="container my-5 py-5">
         <div className="alert alert-danger" role="alert">
-          <h4 className="alert-heading">Error</h4>
+          <h4 className="alert-heading">Error Loading Cart</h4>
           <p>{error}</p>
           <button onClick={fetchCart} className="btn btn-danger mt-2">
             Try Again
@@ -44,7 +43,6 @@ const CartPage = ({ setNumCartItems }) => {
     );
   }
 
-  // Check if cart has items for display logic
   const hasItems = cartItems.length > 0;
 
   return (
@@ -62,6 +60,7 @@ const CartPage = ({ setNumCartItems }) => {
                 <i
                   className="bi bi-cart-x"
                   style={{ fontSize: '5rem', color: '#0dcaf0' }}
+                  aria-hidden="true"
                 ></i>
               </div>
               <h2 className="alert-heading text-center mb-3">
@@ -87,27 +86,32 @@ const CartPage = ({ setNumCartItems }) => {
       ) : (
         <div className="row">
           {/* Left column: Cart items */}
-          <div
-            className="col-md-8"
-            style={{ maxHeight: '70vh', overflowY: 'auto' }}
-          >
-            {/* Warning for out of stock items */}
+          <div className="col-lg-8">
+            {/* Out of stock warning */}
             {!allItemsInStock && (
-              <div className="alert alert-warning mb-3" role="alert">
+              <div
+                className="alert alert-warning mb-3 d-flex align-items-center"
+                role="alert"
+              >
                 <i className="bi bi-exclamation-triangle me-2"></i>
-                Some items in your cart are out of stock. Please update
-                quantities or remove these items before checkout.
+                <span>
+                  Some items in your cart are out of stock. Please update
+                  quantities or remove these items before proceeding to
+                  checkout.
+                </span>
               </div>
             )}
 
-            {/* List of cart items */}
-            {cartItems.map((item) => (
-              <CartItem key={item.id} item={item} onUpdate={fetchCart} />
-            ))}
+            {/* Cart items list */}
+            <div style={{ maxHeight: '65vh', overflowY: 'auto' }}>
+              {cartItems.map((item) => (
+                <CartItem key={item.id} item={item} onUpdate={fetchCart} />
+              ))}
+            </div>
           </div>
 
-          {/* Right column: Cart summary */}
-          <div className="col-md-4">
+          {/* Right column: Order summary (sticky) */}
+          <div className="col-lg-4">
             <CartSummary
               cartItems={cartItems}
               subtotal={cartTotal}
