@@ -15,12 +15,28 @@ const OrderReview = ({
 }) => {
   // Calculate totals
   const subtotal = cart?.sum_total || 0;
-  const vat = (subtotal * 0.075).toFixed(2); // Assuming 7.5% VAT
+  const vat = (subtotal * 0.075).toFixed(2); // 7.5% VAT
   const grandTotal = (
     parseFloat(subtotal) +
     parseFloat(vat) +
     shippingFee
   ).toFixed(2);
+
+  // Build shipping address payload for backend
+  const buildShippingAddressPayload = () => {
+    return {
+      full_name: `${shippingAddress.first_name} ${shippingAddress.last_name}`,
+      email: shippingAddress.email || '', // User's email from profile
+      phone: shippingAddress.phone,
+      address_line1: shippingAddress.address,
+      address_line2: '', // Optional
+      city: shippingAddress.city,
+      state: shippingAddress.state,
+      postal_code: '', // Optional
+      country: 'Nigeria',
+      delivery_notes: '',
+    };
+  };
 
   return (
     <div className="card shadow-sm border-0">

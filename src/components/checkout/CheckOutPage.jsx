@@ -23,6 +23,9 @@ const CheckoutPage = () => {
   const [cart, setCart] = useState(null);
   const [cartCode, setCartCode] = useState(null);
 
+  // User data
+  const [userEmail, setUserEmail] = useState('');
+
   // Form data
   const [shippingAddress, setShippingAddress] = useState({
     first_name: '',
@@ -68,6 +71,7 @@ const CheckoutPage = () => {
 
         // Fetch user data (pre-fill address form)
         const userResponse = await api.get('user_info/');
+        setUserEmail(userResponse.data.email || '');
 
         // Pre-fill shipping address with user data if available
         setShippingAddress({
@@ -160,10 +164,24 @@ const CheckoutPage = () => {
         return;
       }
 
+      // Build shipping address with correct field names for backend
+      const shippingAddressPayload = {
+        full_name: `${shippingAddress.first_name} ${shippingAddress.last_name}`,
+        email: userEmail, // User's email
+        phone: shippingAddress.phone,
+        address_line1: shippingAddress.address,
+        address_line2: '', // Optional
+        city: shippingAddress.city,
+        state: shippingAddress.state,
+        postal_code: '', // Optional
+        country: 'Nigeria',
+        delivery_notes: '',
+      };
+
       // Create order
       const orderPayload = {
         cart_code: cartCode,
-        shipping_address: shippingAddress,
+        shipping_address: shippingAddressPayload,
         shipping_method_id: selectedShippingMethod.id,
       };
 
