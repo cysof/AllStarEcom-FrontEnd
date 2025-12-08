@@ -4,7 +4,7 @@
   border-radius: 12px;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   background: #ffffff;
   height: 100%;
   display: flex;
@@ -13,8 +13,8 @@
 }
 
 .card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
 }
 
 /* Image Container */
@@ -22,7 +22,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 1;
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #f8fafb 0%, #f0f3f7 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,7 +36,7 @@
 }
 
 .card:hover .image {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 /* Badges Container */
@@ -50,51 +50,58 @@
   z-index: 10;
 }
 
-/* Variant Badge */
+/* Variant Badge - Green Success Color */
 .variantBadge {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
-  padding: 0.4rem 0.8rem;
+  padding: 0.45rem 0.9rem;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
-  backdrop-filter: blur(10px);
-  letter-spacing: 0.3px;
+  gap: 0.4rem;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.35);
+  backdrop-filter: blur(8px);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-/* Stock Badge */
+/* Stock Badge - Red */
 .stockBadge {
-  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
-  padding: 0.4rem 0.8rem;
+  padding: 0.45rem 0.9rem;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
-  backdrop-filter: blur(10px);
-  letter-spacing: 0.3px;
+  gap: 0.4rem;
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.35);
+  backdrop-filter: blur(8px);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
+/* Discount Badge - Orange/Amber */
 .discountBadge {
-  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-  color: #1a1a1a;
-  padding: 0.4rem 0.8rem;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  padding: 0.45rem 0.9rem;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
-  backdrop-filter: blur(10px);
-  letter-spacing: 0.3px;
+  gap: 0.4rem;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.35);
+  backdrop-filter: blur(8px);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* Card Body */
@@ -107,22 +114,23 @@
 
 /* Category */
 .category {
-  font-size: 0.8rem;
-  color: #28a745;
+  font-size: 0.78rem;
+  color: #10b981;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
+  display: block;
 }
 
 /* Product Name */
 .productName {
-  font-size: 1rem;
+  font-size: 1.02rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #1f2937;
   line-height: 1.4;
-  margin-bottom: 0.75rem;
-  min-height: 2.4rem;
+  margin-bottom: 0.8rem;
+  min-height: 2.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -134,57 +142,60 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.8rem;
 }
 
 .stars {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.2rem;
 }
 
 .star {
-  color: #ffc107;
+  color: #fbbf24;
   font-size: 0.85rem;
 }
 
 .ratingText {
-  font-size: 0.8rem;
-  color: #6c757d;
+  font-size: 0.78rem;
+  color: #9ca3af;
+  font-weight: 500;
 }
 
 /* Price Section */
 .priceSection {
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
   margin-top: auto;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .price {
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  color: #28a745;
+  color: #10b981;
   letter-spacing: -0.5px;
 }
 
 .originalPrice {
-  font-size: 0.9rem;
-  color: #adb5bd;
+  font-size: 0.88rem;
+  color: #9ca3af;
   text-decoration: line-through;
   margin-left: 0.5rem;
 }
 
 .discount {
-  font-size: 0.85rem;
-  color: #dc3545;
+  font-size: 0.82rem;
+  color: #ef4444;
   font-weight: 600;
   margin-left: 0.5rem;
 }
 
 /* Add to Cart Button */
 .addToCartBtn {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border: none;
-  padding: 0.75rem 1rem;
+  padding: 0.8rem 1.2rem;
   border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 600;
@@ -196,7 +207,10 @@
   gap: 0.5rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 100%;
 }
 
 .addToCartBtn::before {
@@ -207,7 +221,7 @@
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.2);
-  transition: left 0.5s ease;
+  transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .addToCartBtn:hover::before {
@@ -216,33 +230,35 @@
 
 .addToCartBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
-  background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
 }
 
 .addToCartBtn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
 }
 
 .addToCartBtn:disabled {
-  background: #adb5bd;
+  background: #d1d5db;
   cursor: not-allowed;
   box-shadow: none;
+  opacity: 0.6;
 }
 
 .addToCartBtn:disabled:hover {
   transform: none;
+  background: #d1d5db;
 }
 
 /* Quick View Button */
 .quickViewBtn {
   background: transparent;
-  color: #28a745;
-  border: 2px solid #28a745;
-  padding: 0.75rem 1rem;
+  color: #10b981;
+  border: 2px solid #10b981;
+  padding: 0.7rem 1rem;
   border-radius: 8px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -251,12 +267,16 @@
   justify-content: center;
   gap: 0.5rem;
   margin-top: 0.75rem;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .quickViewBtn:hover {
-  background: #28a745;
+  background: #10b981;
   color: white;
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  border-color: #10b981;
 }
 
 .quickViewBtn:active {
@@ -274,16 +294,22 @@
   }
 
   .productName {
-    font-size: 0.95rem;
+    font-size: 0.98rem;
+    min-height: 2.4rem;
   }
 
   .price {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 
-  .addToCartBtn {
-    padding: 0.65rem 0.85rem;
+  .addToCartBtn,
+  .quickViewBtn {
+    padding: 0.7rem 1rem;
     font-size: 0.9rem;
+  }
+
+  .category {
+    font-size: 0.75rem;
   }
 }
 
@@ -305,7 +331,7 @@
   .variantBadge,
   .stockBadge,
   .discountBadge {
-    padding: 0.35rem 0.65rem;
+    padding: 0.35rem 0.7rem;
     font-size: 0.7rem;
   }
 
@@ -314,11 +340,27 @@
   }
 
   .productName {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     min-height: 2.2rem;
+    margin-bottom: 0.6rem;
   }
 
   .price {
-    font-size: 1rem;
+    font-size: 1.1rem;
+  }
+
+  .priceSection {
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+  }
+
+  .addToCartBtn,
+  .quickViewBtn {
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  .ratingText {
+    font-size: 0.7rem;
   }
 }
