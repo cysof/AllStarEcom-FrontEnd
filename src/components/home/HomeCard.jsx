@@ -114,7 +114,7 @@ const HomeCard = ({ product }) => {
 
             {/* Quick View Overlay */}
             <div className={styles.cardOverlay}>
-              <span className={styles.quickViewText}>View Details</span>
+              {/* <span className={styles.quickViewText}>View Details</span> */}
             </div>
           </div>
 
