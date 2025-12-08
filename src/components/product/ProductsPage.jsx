@@ -21,6 +21,7 @@ const ProductsPage = () => {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
   const pageSize = 12;
 
   // Fetch all products
@@ -50,23 +51,29 @@ const ProductsPage = () => {
           params.append('max_price', priceRange.max);
         }
 
+        console.log('📦 Fetching products with params:', params.toString());
         const response = await api.get(`products/?${params.toString()}`);
+        console.log('📦 API Response:', response.data);
 
-        // Handle paginated response
-        if (response.data.results) {
+        // Handle Django REST Framework pagination format
+        if (response.data && response.data.results) {
           // Django REST Framework pagination format
           setProducts(response.data.results);
           setFilteredProducts(response.data.results);
+          setTotalProducts(response.data.count || 0);
           setTotalPages(Math.ceil(response.data.count / pageSize));
         } else if (Array.isArray(response.data)) {
           // Simple array format
           setProducts(response.data);
           setFilteredProducts(response.data);
+          setTotalProducts(response.data.length);
           setTotalPages(1);
         } else {
-          // Single object or other format
+          // Fallback
           setProducts([]);
           setFilteredProducts([]);
+          setTotalProducts(0);
+          setTotalPages(1);
         }
       } catch (err) {
         console.error('Error fetching products:', err);
@@ -111,9 +118,10 @@ const ProductsPage = () => {
   };
 
   const handlePriceChange = (type, value) => {
+    const numValue = parseInt(value) || 0;
     setPriceRange((prev) => ({
       ...prev,
-      [type]: parseInt(value) || 0,
+      [type]: numValue,
     }));
     setCurrentPage(1);
   };
@@ -127,9 +135,24 @@ const ProductsPage = () => {
     setCurrentPage(1);
   };
 
-  // Format currency
-  const formatCurrency = (amount) => {
-    return `₦${parseFloat(amount || 0).toFixed(2)}`;
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = startPage + maxPagesToShow - 1;
+
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
   };
 
   // Loading state
@@ -151,6 +174,12 @@ const ProductsPage = () => {
             >
               Try Again
             </button>
+            <button
+              onClick={() => navigate('/')}
+              className="btn btn-outline-secondary ms-2"
+            >
+              Go to Home
+            </button>
           </div>
         </div>
       </div>
@@ -170,7 +199,7 @@ const ProductsPage = () => {
               </p>
             </div>
             <div className="text-muted">
-              Showing {filteredProducts.length} products
+              Showing {filteredProducts.length} of {totalProducts} products
             </div>
           </div>
         </div>
@@ -231,22 +260,26 @@ const ProductsPage = () => {
                 <h6 className="mb-2 fw-semibold">Price Range</h6>
                 <div className="row g-2">
                   <div className="col-6">
-                    <label className="form-label small text-muted">Min</label>
+                    <label className="form-label small text-muted">
+                      Min (₦)
+                    </label>
                     <input
                       type="number"
                       className="form-control"
-                      placeholder="₦0"
+                      placeholder="0"
                       value={priceRange.min || ''}
                       onChange={(e) => handlePriceChange('min', e.target.value)}
                       min="0"
                     />
                   </div>
                   <div className="col-6">
-                    <label className="form-label small text-muted">Max</label>
+                    <label className="form-label small text-muted">
+                      Max (₦)
+                    </label>
                     <input
                       type="number"
                       className="form-control"
-                      placeholder="₦1,000,000"
+                      placeholder="1000000"
                       value={priceRange.max === 1000000 ? '' : priceRange.max}
                       onChange={(e) => handlePriceChange('max', e.target.value)}
                       min="0"
@@ -319,7 +352,8 @@ const ProductsPage = () => {
                   )}
                   {(priceRange.min > 0 || priceRange.max < 1000000) && (
                     <span className="badge bg-success">
-                      Price: ₦{priceRange.min} - ₦{priceRange.max}
+                      Price: ₦{priceRange.min.toLocaleString()} - ₦
+                      {priceRange.max.toLocaleString()}
                       <button
                         className="btn-close btn-close-white ms-2"
                         style={{ fontSize: '10px' }}
@@ -334,11 +368,18 @@ const ProductsPage = () => {
           )}
 
           {/* Products Grid */}
-          {filteredProducts.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-success" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <p className="mt-2 text-muted">Loading products...</p>
+            </div>
+          ) : filteredProducts.length > 0 ? (
             <>
-              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4">
+              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-3">
                 {filteredProducts.map((product) => (
-                  <div key={product.id} className="col">
+                  <div key={product.id} className="col d-flex">
                     <ProductCard product={product} />
                   </div>
                 ))}
@@ -346,8 +387,23 @@ const ProductsPage = () => {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <nav className="mt-5">
+                <nav className="mt-5" aria-label="Product pagination">
                   <ul className="pagination justify-content-center">
+                    <li
+                      className={`page-item ${
+                        currentPage === 1 ? 'disabled' : ''
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => setCurrentPage(1)}
+                        disabled={currentPage === 1}
+                        aria-label="First page"
+                      >
+                        <i className="bi bi-chevron-double-left"></i>
+                      </button>
+                    </li>
+
                     <li
                       className={`page-item ${
                         currentPage === 1 ? 'disabled' : ''
@@ -357,28 +413,31 @@ const ProductsPage = () => {
                         className="page-link"
                         onClick={() => setCurrentPage(currentPage - 1)}
                         disabled={currentPage === 1}
+                        aria-label="Previous page"
                       >
-                        Previous
+                        <i className="bi bi-chevron-left"></i>
                       </button>
                     </li>
 
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (page) => (
-                        <li
-                          key={page}
-                          className={`page-item ${
-                            currentPage === page ? 'active' : ''
-                          }`}
+                    {getPageNumbers().map((page) => (
+                      <li
+                        key={page}
+                        className={`page-item ${
+                          currentPage === page ? 'active' : ''
+                        }`}
+                      >
+                        <button
+                          className="page-link"
+                          onClick={() => setCurrentPage(page)}
+                          aria-label={`Page ${page}`}
+                          aria-current={
+                            currentPage === page ? 'page' : undefined
+                          }
                         >
-                          <button
-                            className="page-link"
-                            onClick={() => setCurrentPage(page)}
-                          >
-                            {page}
-                          </button>
-                        </li>
-                      )
-                    )}
+                          {page}
+                        </button>
+                      </li>
+                    ))}
 
                     <li
                       className={`page-item ${
@@ -389,11 +448,30 @@ const ProductsPage = () => {
                         className="page-link"
                         onClick={() => setCurrentPage(currentPage + 1)}
                         disabled={currentPage === totalPages}
+                        aria-label="Next page"
                       >
-                        Next
+                        <i className="bi bi-chevron-right"></i>
+                      </button>
+                    </li>
+
+                    <li
+                      className={`page-item ${
+                        currentPage === totalPages ? 'disabled' : ''
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => setCurrentPage(totalPages)}
+                        disabled={currentPage === totalPages}
+                        aria-label="Last page"
+                      >
+                        <i className="bi bi-chevron-double-right"></i>
                       </button>
                     </li>
                   </ul>
+                  <div className="text-center text-muted mt-2">
+                    Page {currentPage} of {totalPages}
+                  </div>
                 </nav>
               )}
             </>
@@ -402,7 +480,10 @@ const ProductsPage = () => {
             <div className="text-center py-5">
               <div className="alert alert-warning" role="alert">
                 <h4 className="alert-heading">No Products Found</h4>
-                <p>Try adjusting your filters or search term.</p>
+                <p>
+                  No products match your current filters. Try adjusting your
+                  search or filters.
+                </p>
                 <button
                   onClick={resetFilters}
                   className="btn btn-outline-primary mt-2"
