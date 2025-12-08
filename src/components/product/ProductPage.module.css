@@ -422,3 +422,48 @@ input[type='number'] {
     border: 1px solid #ddd;
   }
 }
+
+
+
+/* --- Existing CSS remains unchanged --- */
+
+/* Variant color circle buttons */
+.color-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  padding: 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.color-btn.selected {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16,185,129,0.3);
+}
+.color-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Desktop card layout for main section */
+@media (min-width: 992px) {
+  .container.px-4.px-lg-5.my-5 {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    padding: 2rem;
+  }
+}
+
+/* Related product hover effect */
+.related-product-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.related-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}
