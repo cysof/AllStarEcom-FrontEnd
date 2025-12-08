@@ -43,7 +43,21 @@ const ProductPage = ({ setNumCartItems }) => {
         const response = await api.get(`product-detail/${slug}/`);
         const productData = response.data;
         setProduct(productData);
-        setSimilarProducts(productData.similar_products || []);
+
+        // DEBUG: Log the response
+        console.log('📦 API Response keys:', Object.keys(productData));
+        console.log('📦 Similar products:', productData.similar_products);
+        console.log('📦 Related products:', productData.related_products);
+
+        // Set similar products - handle both field names
+        const relatedProds =
+          productData.similar_products || productData.related_products || [];
+        console.log(
+          '📦 Setting similar products:',
+          relatedProds.length,
+          'items'
+        );
+        setSimilarProducts(relatedProds);
 
         // Initialize variant data
         if (productData.has_variants && productData.variants) {
