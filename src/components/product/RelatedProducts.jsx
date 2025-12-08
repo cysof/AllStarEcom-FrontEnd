@@ -20,14 +20,12 @@ const RelatedProducts = ({
     return null;
   }
 
-  // Filter only available products for display (must be is_available)
-  // Don't filter by in_stock since related products are already available from backend
+  // Filter only available products for display
+  // Use in_stock since is_available is not in the API response
   const availableProducts = products
     .filter((product) => {
-      console.log(
-        `🎁 Product "${product.name}": is_available=${product.is_available}, in_stock=${product.in_stock}`
-      );
-      return product.is_available;
+      console.log(`🎁 Product "${product.name}": in_stock=${product.in_stock}`);
+      return product.in_stock;
     })
     .slice(0, maxDisplay);
 
