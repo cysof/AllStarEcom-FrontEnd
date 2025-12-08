@@ -49,8 +49,8 @@
 }
 
 .viewMoreBtn:hover {
-  background: #10b981;
-  color: white;
+  background: #01801c;
+  color: rgb(0, 128, 17);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
