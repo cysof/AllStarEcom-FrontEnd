@@ -118,8 +118,8 @@
 
 .variantBadge {
   left: 10px;
-  background: rgba(8, 99, 0, 0.95);
-  color: rgb(9, 145, 27);
+  background: rgba(235, 231, 8, 0.95);
+  color: rgba(231, 228, 20, 0.87);
 }
 
 .badgeText {
