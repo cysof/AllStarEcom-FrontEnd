@@ -1,775 +1,446 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import ProductPagePlaceHolder from './ProductPagePlaceHolder';
-import RelatedProducts from './RelatedProducts';
+import { Link } from 'react-router-dom';
 import api from '../../api';
-import { toast } from 'react-toastify';
-import './ProductPage.module.css';
+import Spinner from '../ui/Spinner';
+import ProductCard from '../product/ProductCard';
+import './ProductsPage.module.css';
 
-const ProductPage = ({ setNumCartItems }) => {
-  const { slug } = useParams();
-  const navigate = useNavigate();
-  const [product, setProduct] = useState(null);
-  const [similarProducts, setSimilarProducts] = useState([]);
+const ProductsPage = () => {
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [inCart, setInCart] = useState(false);
-  const [addingToCart, setAddingToCart] = useState(false);
-  const [checkingCart, setCheckingCart] = useState(false);
-  const [cartItemId, setCartItemId] = useState(null);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  // Variant selection state
-  const [selectedVariant, setSelectedVariant] = useState(null);
-  const [selectedSize, setSelectedSize] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
-  const [availableVariants, setAvailableVariants] = useState([]);
-  const [availableSizes, setAvailableSizes] = useState([]);
-  const [availableColors, setAvailableColors] = useState([]);
-  const [quantity, setQuantity] = useState(1);
+  // Filters state
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000000 });
+  const [sortBy, setSortBy] = useState('newest');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch product details
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 12;
+
+  // Fetch all products
   useEffect(() => {
-    const fetchProduct = async () => {
-      if (!slug || slug === 'undefined' || slug === 'null') {
-        setError('Invalid product URL');
-        setLoading(false);
-        return;
-      }
-
+    const fetchProducts = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const response = await api.get(`product-detail/${slug}/`);
-        const productData = response.data;
-        setProduct(productData);
-        setSimilarProducts(productData.similar_products || []);
+        // Build query parameters
+        const params = new URLSearchParams({
+          page: currentPage,
+          page_size: pageSize,
+          sort: sortBy,
+        });
 
-        // Initialize variant data
-        if (productData.has_variants && productData.variants) {
-          const variants = productData.variants;
-          setAvailableVariants(variants);
+        if (selectedCategory) {
+          params.append('category', selectedCategory);
+        }
+        if (searchQuery) {
+          params.append('search', searchQuery);
+        }
+        if (priceRange.min > 0) {
+          params.append('min_price', priceRange.min);
+        }
+        if (priceRange.max < 1000000) {
+          params.append('max_price', priceRange.max);
+        }
 
-          // Extract unique sizes and colors
-          const sizes = [
-            ...new Set(variants.map((v) => v.size).filter(Boolean)),
-          ];
-          const colors = [
-            ...new Set(variants.map((v) => v.color).filter(Boolean)),
-          ];
+        const response = await api.get(`products/?${params.toString()}`);
 
-          setAvailableSizes(sizes);
-          setAvailableColors(colors);
-
-          // Auto-select first available variant
-          const firstAvailable = variants.find((v) => v.in_stock);
-          if (firstAvailable) {
-            setSelectedVariant(firstAvailable);
-            setSelectedSize(firstAvailable.size || '');
-            setSelectedColor(firstAvailable.color || '');
-          }
+        // Handle paginated response
+        if (response.data.results) {
+          // Django REST Framework pagination format
+          setProducts(response.data.results);
+          setFilteredProducts(response.data.results);
+          setTotalPages(Math.ceil(response.data.count / pageSize));
+        } else if (Array.isArray(response.data)) {
+          // Simple array format
+          setProducts(response.data);
+          setFilteredProducts(response.data);
+          setTotalPages(1);
+        } else {
+          // Single object or other format
+          setProducts([]);
+          setFilteredProducts([]);
         }
       } catch (err) {
-        if (err.response?.status === 404) {
-          setError('Product not found');
-        } else if (err.response?.status === 500) {
-          setError('Server error. Please try again later.');
-        } else {
-          setError('Failed to load product. Please try again later.');
-        }
+        console.error('Error fetching products:', err);
+        setError('Failed to load products. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProduct();
-  }, [slug]);
+    fetchProducts();
+  }, [currentPage, selectedCategory, sortBy, searchQuery, priceRange]);
 
-  // Check if product is in cart
+  // Fetch categories
   useEffect(() => {
-    const checkCartStatus = async () => {
-      const cart_code = localStorage.getItem('cart_code');
-      if (!product?.id || !cart_code) return;
-
-      setCheckingCart(true);
+    const fetchCategories = async () => {
       try {
-        const response = await api.get(
-          `product_in_cart?cart_code=${cart_code}&product_id=${product.id}${
-            selectedVariant ? `&variant_id=${selectedVariant.id}` : ''
-          }`
-        );
-        setInCart(response.data.product_in_cart || false);
-        setCartItemId(response.data.cart_item_id || null);
+        const response = await api.get('categories/');
+        setCategories(response.data);
       } catch (err) {
-        setInCart(false);
-        setCartItemId(null);
-      } finally {
-        setCheckingCart(false);
+        console.error('Error fetching categories:', err);
       }
     };
 
-    checkCartStatus();
-  }, [product?.id, selectedVariant]);
+    fetchCategories();
+  }, []);
 
-  // Update selected variant when size or color changes
-  useEffect(() => {
-    if (!product?.has_variants || !availableVariants.length) return;
-
-    let filteredVariants = availableVariants;
-
-    if (selectedSize) {
-      filteredVariants = filteredVariants.filter(
-        (v) => v.size === selectedSize
-      );
-    }
-
-    if (selectedColor) {
-      filteredVariants = filteredVariants.filter(
-        (v) => v.color === selectedColor
-      );
-    }
-
-    // Find first available variant that matches selection
-    const matchingVariant = filteredVariants.find((v) => v.in_stock);
-
-    if (matchingVariant) {
-      setSelectedVariant(matchingVariant);
-    } else {
-      setSelectedVariant(null);
-      // Show error message if no variant matches
-      if (selectedSize || selectedColor) {
-        toast.error('Selected combination is out of stock');
-      }
-    }
-  }, [selectedSize, selectedColor, availableVariants, product?.has_variants]);
-
-  // Add item to cart
-  const add_item = async () => {
-    // Validate variant selection for variant products
-    if (product?.has_variants && !selectedVariant) {
-      toast.error('Please select a size/color combination');
-      return;
-    }
-
-    // Check if product/variant is available
-    if (product?.has_variants) {
-      if (!selectedVariant?.is_available) {
-        toast.error('This variant is not available for purchase');
-        return;
-      }
-      if (!selectedVariant?.in_stock) {
-        toast.error('This variant is out of stock');
-        return;
-      }
-    } else {
-      if (!product?.is_available) {
-        toast.error('This product is not available for purchase');
-        return;
-      }
-      if (!product?.in_stock) {
-        toast.error('This product is out of stock');
-        return;
-      }
-    }
-
-    const cart_code = localStorage.getItem('cart_code');
-    if (!cart_code) {
-      toast.error('Cart not initialized. Please refresh the page.');
-      return;
-    }
-    if (!product?.id) {
-      toast.error('Product information not available.');
-      return;
-    }
-
-    setAddingToCart(true);
-    const newItem = {
-      cart_code: cart_code,
-      product_id: product.id,
-      quantity: quantity,
-      variant_id: selectedVariant?.id || null,
-    };
-
-    try {
-      const response = await api.post('add_item/', newItem);
-      setInCart(true);
-      setCartItemId(response.data.data?.id);
-      toast.success('Product added to cart successfully');
-      setNumCartItems((current) => current + quantity);
-    } catch (err) {
-      // Handle specific error messages from backend
-      const errorMessage =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        'Failed to add item to cart. Please try again.';
-
-      if (err.response?.status === 400) {
-        toast.error(errorMessage);
-      } else if (err.response?.status === 500) {
-        toast.error('Server error. Please try again later.');
-      } else {
-        toast.error(errorMessage);
-      }
-    } finally {
-      setAddingToCart(false);
-    }
+  // Handle search
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setCurrentPage(1); // Reset to first page on new search
   };
 
-  // Handle quantity change
-  const handleQuantityChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (value > 0 && value <= 10) {
-      setQuantity(value);
-    }
+  // Handle filter changes
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+    setCurrentPage(1);
   };
 
-  // Handle similar product click
-  const handleSimilarProductClick = (productSlug) => {
-    if (productSlug) {
-      navigate(`/product-detail/${productSlug}`);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+    setCurrentPage(1);
   };
 
-  // Format currency to Naira
+  const handlePriceChange = (type, value) => {
+    setPriceRange((prev) => ({
+      ...prev,
+      [type]: parseInt(value) || 0,
+    }));
+    setCurrentPage(1);
+  };
+
+  // Reset filters
+  const resetFilters = () => {
+    setSelectedCategory('');
+    setPriceRange({ min: 0, max: 1000000 });
+    setSortBy('newest');
+    setSearchQuery('');
+    setCurrentPage(1);
+  };
+
+  // Format currency
   const formatCurrency = (amount) => {
     return `₦${parseFloat(amount || 0).toFixed(2)}`;
   };
 
-  // Get stock status badge
-  const getStockBadge = () => {
-    if (product?.has_variants) {
-      if (selectedVariant) {
-        if (!selectedVariant.is_available) {
-          return <span className="badge bg-danger">Variant Not Available</span>;
-        }
-        if (!selectedVariant.in_stock) {
-          return <span className="badge bg-danger">Variant Out of Stock</span>;
-        }
-        if (selectedVariant.stock_quantity <= 5) {
-          return (
-            <span className="badge bg-warning text-dark">
-              Low Stock: {selectedVariant.stock_quantity}
-            </span>
-          );
-        }
-        return (
-          <span className="badge bg-success">
-            In Stock: {selectedVariant.stock_quantity}
-          </span>
-        );
-      }
-      return <span className="badge bg-info">Select size/color</span>;
-    } else {
-      if (!product?.is_available) {
-        return <span className="badge bg-danger">Not Available</span>;
-      }
-      if (!product?.in_stock) {
-        return <span className="badge bg-danger">Out of Stock</span>;
-      }
-      if (product?.stock_quantity <= 5) {
-        return (
-          <span className="badge bg-warning text-dark">
-            Low Stock: {product.stock_quantity}
-          </span>
-        );
-      }
-      return (
-        <span className="badge bg-success">
-          In Stock: {product.stock_quantity}
-        </span>
-      );
-    }
-  };
-
-  // Get shipping badge
-  const getShippingBadge = () => {
-    if (!product?.requires_shipping) {
-      return <span className="badge bg-info">Digital Product</span>;
-    }
-    if (product?.free_shipping) {
-      return <span className="badge bg-success">Free Shipping</span>;
-    }
-    if (product?.calculated_shipping_fee > 0) {
-      return (
-        <span className="badge bg-secondary">
-          Shipping: {formatCurrency(product.calculated_shipping_fee)}
-        </span>
-      );
-    }
-    return <span className="badge bg-light text-dark">Shipping required</span>;
-  };
-
-  // Check if add to cart button should be disabled
-  const isAddToCartDisabled = () => {
-    if (product?.has_variants) {
-      return (
-        !selectedVariant ||
-        !selectedVariant.is_available ||
-        !selectedVariant.in_stock ||
-        inCart ||
-        addingToCart ||
-        checkingCart
-      );
-    } else {
-      return (
-        !product?.is_available ||
-        !product?.in_stock ||
-        inCart ||
-        addingToCart ||
-        checkingCart
-      );
-    }
-  };
-
-  // Get add to cart button text
-  const getAddToCartButtonText = () => {
-    if (checkingCart) return 'Checking...';
-    if (addingToCart) return 'Adding...';
-    if (inCart) return 'Product added to cart';
-
-    if (product?.has_variants) {
-      if (!selectedVariant) return 'Select variant';
-      if (!selectedVariant.is_available) return 'Variant Not Available';
-      if (!selectedVariant.in_stock) return 'Variant Out of Stock';
-    } else {
-      if (!product?.is_available) return 'Not Available';
-      if (!product?.in_stock) return 'Out of Stock';
-    }
-
-    return 'Add to Cart';
-  };
-
-  // Get display price
-  const getDisplayPrice = () => {
-    if (product?.has_variants && selectedVariant) {
-      return selectedVariant.final_price;
-    }
-    return product?.price || 0;
-  };
-
-  // Render variant selection UI
-  const renderVariantSelection = () => {
-    if (!product?.has_variants || !availableVariants.length) return null;
-
-    return (
-      <div className="variant-selection mb-4">
-        <h6 className="mb-3" style={{ color: '#28a745', fontWeight: '600' }}>
-          Select Options
-        </h6>
-
-        {/* Size Selection */}
-        {availableSizes.length > 0 && (
-          <div className="mb-3">
-            <label className="form-label fw-medium">Size</label>
-            <div className="d-flex flex-wrap gap-2">
-              {availableSizes.map((size) => {
-                const variant = availableVariants.find(
-                  (v) => v.size === size && v.in_stock
-                );
-                const isAvailable = !!variant;
-                const isSelected = selectedSize === size;
-
-                return (
-                  <button
-                    key={size}
-                    type="button"
-                    className={`btn ${
-                      isSelected
-                        ? 'btn-success'
-                        : isAvailable
-                        ? 'btn-outline-success'
-                        : 'btn-outline-secondary'
-                    }`}
-                    onClick={() => isAvailable && setSelectedSize(size)}
-                    disabled={!isAvailable}
-                    title={isAvailable ? `Available` : 'Out of stock'}
-                    style={{
-                      minWidth: '60px',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    {size}
-                    {!isAvailable && (
-                      <span className="ms-1 text-danger">✗</span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Color Selection */}
-        {availableColors.length > 0 && (
-          <div className="mb-3">
-            <label className="form-label fw-medium">Color</label>
-            <div className="d-flex flex-wrap gap-2">
-              {availableColors.map((color) => {
-                const variant = availableVariants.find(
-                  (v) => v.color === color && v.in_stock
-                );
-                const isAvailable = !!variant;
-                const isSelected = selectedColor === color;
-
-                return (
-                  <button
-                    key={color}
-                    type="button"
-                    className={`btn ${
-                      isSelected
-                        ? 'btn-success'
-                        : isAvailable
-                        ? 'btn-outline-success'
-                        : 'btn-outline-secondary'
-                    }`}
-                    onClick={() => isAvailable && setSelectedColor(color)}
-                    disabled={!isAvailable}
-                    title={
-                      isAvailable
-                        ? `${color} - Available`
-                        : `${color} - Out of stock`
-                    }
-                    style={{
-                      minWidth: '80px',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    {color}
-                    {!isAvailable && (
-                      <span className="ms-1 text-danger">✗</span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Selected Variant Details */}
-        {selectedVariant && (
-          <div className="alert alert-success p-3">
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <strong>Selected:</strong> {selectedVariant.display_name}
-                {selectedVariant.price_adjustment !== 0 && (
-                  <small className="text-muted ms-2">
-                    ({selectedVariant.price_adjustment > 0 ? '+' : ''}
-                    {formatCurrency(selectedVariant.price_adjustment)})
-                  </small>
-                )}
-              </div>
-              <div className="fw-bold" style={{ color: '#28a745' }}>
-                {formatCurrency(selectedVariant.final_price)}
-              </div>
-            </div>
-            <div className="mt-2">
-              <small>
-                SKU: <strong>{selectedVariant.sku}</strong> | Stock:{' '}
-                <strong>{selectedVariant.stock_quantity}</strong> units
-              </small>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  // Render quantity selector
-  const renderQuantitySelector = () => {
-    const maxQuantity =
-      selectedVariant?.stock_quantity || product?.stock_quantity || 10;
-
-    return (
-      <div className="mb-4">
-        <label className="form-label fw-medium">Quantity</label>
-        <div className="d-flex align-items-center">
-          <button
-            className="btn btn-outline-secondary"
-            onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-            disabled={quantity <= 1}
-            style={{ width: '40px', height: '40px' }}
-          >
-            -
-          </button>
-          <input
-            type="number"
-            className="form-control text-center mx-2"
-            style={{ width: '80px', height: '40px' }}
-            value={quantity}
-            onChange={handleQuantityChange}
-            min="1"
-            max={maxQuantity}
-          />
-          <button
-            className="btn btn-outline-secondary"
-            onClick={() => quantity < maxQuantity && setQuantity(quantity + 1)}
-            disabled={quantity >= maxQuantity}
-            style={{ width: '40px', height: '40px' }}
-          >
-            +
-          </button>
-          <small className="ms-3 text-muted">Max: {maxQuantity} units</small>
-        </div>
-      </div>
-    );
-  };
-
-  if (loading) return <ProductPagePlaceHolder />;
-
-  if (error) {
-    return (
-      <div className="container text-center py-5">
-        <div className="alert alert-danger">
-          <h4 className="alert-heading">Error Loading Product</h4>
-          <p>{error}</p>
-          <hr />
-          <button onClick={() => navigate('/')} className="btn btn-success">
-            Return to Home
-          </button>
-        </div>
-      </div>
-    );
+  // Loading state
+  if (loading && currentPage === 1) {
+    return <Spinner loading={loading} />;
   }
 
-  if (!product) {
+  // Error state
+  if (error && currentPage === 1) {
     return (
-      <div className="container text-center py-5">
-        <div className="alert alert-warning">
-          <h4>Product not available</h4>
-          <button
-            onClick={() => navigate('/')}
-            className="btn btn-success mt-3"
-          >
-            Return to Home
-          </button>
+      <div className="container my-5 py-5">
+        <div className="alert alert-danger" role="alert">
+          <h4 className="alert-heading">Error Loading Products</h4>
+          <p>{error}</p>
+          <div className="mt-3">
+            <button
+              onClick={() => window.location.reload()}
+              className="btn btn-primary"
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="product-page">
-      <section className="py-5">
-        <div className="container px-4 px-lg-5 my-5">
-          <div className="row gx-4 gx-lg-5 align-items-center">
-            {/* Product Image Section */}
-            <div className="col-md-6">
-              {/* Main Image */}
-              <div className="product-main-image mb-5 mb-md-0">
-                <img
-                  className="img-fluid rounded shadow-sm"
-                  src={
-                    product.large_image_url ||
-                    product.image_url ||
-                    'https://dummyimage.com/600x700/dee2e6/6c757d.jpg'
-                  }
-                  alt={product.name || 'Product image'}
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src =
-                      'https://dummyimage.com/600x700/dee2e6/6c757d.jpg';
-                  }}
-                />
-              </div>
-
-              {/* Variant Images */}
-              {product?.has_variants && selectedVariant?.image && (
-                <div className="mt-4">
-                  <small className="text-muted">Variant Image:</small>
-                  <img
-                    src={selectedVariant.image}
-                    alt={selectedVariant.display_name}
-                    className="img-thumbnail mt-2"
-                    style={{ maxWidth: '150px' }}
-                  />
-                </div>
-              )}
+    <div className="container-fluid py-4">
+      {/* Page Header */}
+      <div className="row mb-4">
+        <div className="col-12">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <h1 className="display-6 fw-bold mb-2">All Products</h1>
+              <p className="text-muted mb-0">
+                Discover our latest collection of fashion items
+              </p>
             </div>
+            <div className="text-muted">
+              Showing {filteredProducts.length} products
+            </div>
+          </div>
+        </div>
+      </div>
 
-            {/* Product Details Section */}
-            <div className="col-md-6">
-              {/* Product Name */}
-              <h1
-                className="display-5 fw-bolder mb-3"
-                style={{ color: '#333' }}
-              >
-                {product.name || 'Product Name'}
-              </h1>
-
-              {/* Price */}
-              <div className="fs-3 mb-3">
-                <span className="fw-bold" style={{ color: '#28a745' }}>
-                  {formatCurrency(getDisplayPrice())}
-                </span>
-                {product?.has_variants && !selectedVariant && (
-                  <small className="text-muted d-block mt-1">
-                    (Select variant for exact price)
-                  </small>
-                )}
-              </div>
-
-              {/* Stock & Shipping Badges */}
-              <div className="d-flex flex-wrap gap-2 mb-4">
-                {getStockBadge()}
-                {getShippingBadge()}
-              </div>
-
-              {/* Variant Selection */}
-              {renderVariantSelection()}
-
-              {/* Product Description */}
+      <div className="row">
+        {/* Filters Sidebar */}
+        <div className="col-lg-3 col-md-4 mb-4">
+          <div
+            className="card border-0 shadow-sm sticky-top"
+            style={{ top: '20px' }}
+          >
+            <div className="card-header bg-white border-bottom">
+              <h5 className="mb-0">
+                <i className="bi bi-filter me-2"></i>
+                Filters
+              </h5>
+            </div>
+            <div className="card-body">
+              {/* Search */}
               <div className="mb-4">
-                <h6 className="mb-2 fw-medium" style={{ color: '#28a745' }}>
-                  Description
-                </h6>
-                <p className="text-muted" style={{ lineHeight: '1.6' }}>
-                  {product.description || 'No description available.'}
-                </p>
+                <h6 className="mb-2 fw-semibold">Search</h6>
+                <form onSubmit={handleSearch}>
+                  <div className="input-group">
+                    <input
+                      type="search"
+                      className="form-control"
+                      placeholder="Search products..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <button className="btn btn-outline-success" type="submit">
+                      <i className="bi bi-search"></i>
+                    </button>
+                  </div>
+                </form>
               </div>
 
-              {/* Product Details */}
+              {/* Categories */}
               <div className="mb-4">
-                <h6 className="mb-3 fw-medium" style={{ color: '#28a745' }}>
-                  Product Details
-                </h6>
-                <ul className="list-unstyled">
-                  <li className="mb-2">
-                    <i className="bi bi-box-seam me-2 text-success"></i>
-                    <strong>Category:</strong>{' '}
-                    <span className="text-muted">
-                      {product.category?.name || 'Uncategorized'}
-                    </span>
-                  </li>
-                  <li className="mb-2">
-                    <i className="bi bi-check-circle me-2 text-success"></i>
-                    <strong>Type:</strong>{' '}
-                    <span className="text-muted">
-                      {product.has_variants
-                        ? 'Product with variants'
-                        : 'Simple product'}
-                    </span>
-                  </li>
-                  <li className="mb-2">
-                    <i className="bi bi-grid-3x3-gap me-2 text-success"></i>
-                    <strong>Total Stock:</strong>{' '}
-                    <span className="text-muted">
-                      {product.total_stock || 0} units
-                    </span>
-                  </li>
-                  <li>
-                    <i className="bi bi-truck me-2 text-success"></i>
-                    <strong>Shipping:</strong>{' '}
-                    <span className="text-muted">
-                      {product.requires_shipping
-                        ? product.free_shipping
-                          ? 'Free Shipping'
-                          : `Shipping fee: ${formatCurrency(
-                              product.calculated_shipping_fee
-                            )}`
-                        : 'Digital - No shipping required'}
-                    </span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Quantity Selector */}
-              {renderQuantitySelector()}
-
-              {/* Add to Cart Button */}
-              <div className="d-flex mb-3">
-                <button
-                  className="btn btn-success flex-shrink-0 py-3"
-                  type="button"
-                  onClick={add_item}
-                  disabled={isAddToCartDisabled()}
-                  aria-label={getAddToCartButtonText()}
-                  style={{
-                    minWidth: '200px',
-                    fontSize: '1.1rem',
-                    fontWeight: '600',
-                    transition: 'all 0.3s ease',
-                  }}
+                <h6 className="mb-2 fw-semibold">Category</h6>
+                <select
+                  className="form-select"
+                  value={selectedCategory}
+                  onChange={handleCategoryChange}
                 >
-                  <i className="bi-cart-fill me-2"></i>
-                  {getAddToCartButtonText()}
+                  <option value="">All Categories</option>
+                  {categories.map((category) => (
+                    <option key={category.slug} value={category.slug}>
+                      {category.name} ({category.product_count || 0})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Price Range */}
+              <div className="mb-4">
+                <h6 className="mb-2 fw-semibold">Price Range</h6>
+                <div className="row g-2">
+                  <div className="col-6">
+                    <label className="form-label small text-muted">Min</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      placeholder="₦0"
+                      value={priceRange.min || ''}
+                      onChange={(e) => handlePriceChange('min', e.target.value)}
+                      min="0"
+                    />
+                  </div>
+                  <div className="col-6">
+                    <label className="form-label small text-muted">Max</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      placeholder="₦1,000,000"
+                      value={priceRange.max === 1000000 ? '' : priceRange.max}
+                      onChange={(e) => handlePriceChange('max', e.target.value)}
+                      min="0"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Sorting */}
+              <div className="mb-4">
+                <h6 className="mb-2 fw-semibold">Sort By</h6>
+                <select
+                  className="form-select"
+                  value={sortBy}
+                  onChange={handleSortChange}
+                >
+                  <option value="newest">Newest Arrivals</option>
+                  <option value="price_low">Price: Low to High</option>
+                  <option value="price_high">Price: High to Low</option>
+                  <option value="name">Name: A to Z</option>
+                </select>
+              </div>
+
+              {/* Reset Filters Button */}
+              <button
+                onClick={resetFilters}
+                className="btn btn-outline-secondary w-100"
+              >
+                <i className="bi bi-arrow-clockwise me-2"></i>
+                Reset Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Products Grid */}
+        <div className="col-lg-9 col-md-8">
+          {/* Active Filters Display */}
+          {(selectedCategory ||
+            searchQuery ||
+            priceRange.min > 0 ||
+            priceRange.max < 1000000) && (
+            <div className="alert alert-light border mb-4">
+              <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div className="d-flex flex-wrap gap-2">
+                  <span className="fw-semibold">Active Filters:</span>
+                  {selectedCategory && (
+                    <span className="badge bg-primary">
+                      Category:{' '}
+                      {categories.find((c) => c.slug === selectedCategory)
+                        ?.name || selectedCategory}
+                      <button
+                        className="btn-close btn-close-white ms-2"
+                        style={{ fontSize: '10px' }}
+                        onClick={() => setSelectedCategory('')}
+                        aria-label="Remove category filter"
+                      ></button>
+                    </span>
+                  )}
+                  {searchQuery && (
+                    <span className="badge bg-info">
+                      Search: "{searchQuery}"
+                      <button
+                        className="btn-close btn-close-white ms-2"
+                        style={{ fontSize: '10px' }}
+                        onClick={() => setSearchQuery('')}
+                        aria-label="Remove search filter"
+                      ></button>
+                    </span>
+                  )}
+                  {(priceRange.min > 0 || priceRange.max < 1000000) && (
+                    <span className="badge bg-success">
+                      Price: ₦{priceRange.min} - ₦{priceRange.max}
+                      <button
+                        className="btn-close btn-close-white ms-2"
+                        style={{ fontSize: '10px' }}
+                        onClick={() => setPriceRange({ min: 0, max: 1000000 })}
+                        aria-label="Remove price filter"
+                      ></button>
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Products Grid */}
+          {filteredProducts.length > 0 ? (
+            <>
+              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4">
+                {filteredProducts.map((product) => (
+                  <div key={product.id} className="col">
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <nav className="mt-5">
+                  <ul className="pagination justify-content-center">
+                    <li
+                      className={`page-item ${
+                        currentPage === 1 ? 'disabled' : ''
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                        disabled={currentPage === 1}
+                      >
+                        Previous
+                      </button>
+                    </li>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <li
+                          key={page}
+                          className={`page-item ${
+                            currentPage === page ? 'active' : ''
+                          }`}
+                        >
+                          <button
+                            className="page-link"
+                            onClick={() => setCurrentPage(page)}
+                          >
+                            {page}
+                          </button>
+                        </li>
+                      )
+                    )}
+
+                    <li
+                      className={`page-item ${
+                        currentPage === totalPages ? 'disabled' : ''
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                      >
+                        Next
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              )}
+            </>
+          ) : (
+            // No products found
+            <div className="text-center py-5">
+              <div className="alert alert-warning" role="alert">
+                <h4 className="alert-heading">No Products Found</h4>
+                <p>Try adjusting your filters or search term.</p>
+                <button
+                  onClick={resetFilters}
+                  className="btn btn-outline-primary mt-2"
+                >
+                  Clear All Filters
                 </button>
               </div>
+            </div>
+          )}
+        </div>
+      </div>
 
-              {/* Additional Info Messages */}
-              <div className="messages mt-3">
-                {product?.has_variants && !selectedVariant && (
-                  <p className="text-warning mb-2">
-                    <i className="bi bi-exclamation-triangle me-1"></i>
-                    Please select a size and color combination.
-                  </p>
-                )}
-                {product?.has_variants &&
-                  selectedVariant &&
-                  !selectedVariant?.is_available && (
-                    <p className="text-danger mb-2">
-                      <i className="bi bi-exclamation-triangle me-1"></i>
-                      This variant is not available for purchase.
-                    </p>
-                  )}
-                {product?.has_variants &&
-                  selectedVariant &&
-                  !selectedVariant?.in_stock && (
-                    <p className="text-danger mb-2">
-                      <i className="bi bi-exclamation-triangle me-1"></i>
-                      This variant is out of stock.
-                    </p>
-                  )}
-                {!product?.has_variants && !product?.is_available && (
-                  <p className="text-danger mb-2">
-                    <i className="bi bi-exclamation-triangle me-1"></i>
-                    This product is not available for purchase.
-                  </p>
-                )}
-                {!product?.has_variants &&
-                  product?.is_available &&
-                  !product?.in_stock && (
-                    <p className="text-danger mb-2">
-                      <i className="bi bi-exclamation-triangle me-1"></i>
-                      This product is out of stock. Check back later!
-                    </p>
-                  )}
-                {inCart && (
-                  <p className="text-success mb-2">
-                    <i className="bi bi-check-circle me-1"></i>
-                    This product is already in your cart.
-                    {cartItemId && (
-                      <button
-                        className="btn btn-link btn-sm p-0 ms-2"
-                        onClick={() => navigate('/cart')}
-                        style={{ color: '#28a745' }}
-                      >
-                        View in cart →
-                      </button>
-                    )}
-                  </p>
-                )}
+      {/* Info Section */}
+      <div className="row mt-5 pt-4 border-top">
+        <div className="col-12">
+          <div className="alert alert-light border" role="alert">
+            <div className="row">
+              <div className="col-md-4 text-center mb-3 mb-md-0">
+                <i className="bi bi-truck display-6 text-success mb-2 d-block"></i>
+                <h5>Free Shipping</h5>
+                <p className="text-muted small">On orders over ₦50,000</p>
+              </div>
+              <div className="col-md-4 text-center mb-3 mb-md-0">
+                <i className="bi bi-arrow-counterclockwise display-6 text-success mb-2 d-block"></i>
+                <h5>30-Day Returns</h5>
+                <p className="text-muted small">Hassle-free returns</p>
+              </div>
+              <div className="col-md-4 text-center">
+                <i className="bi bi-shield-check display-6 text-success mb-2 d-block"></i>
+                <h5>Secure Payment</h5>
+                <p className="text-muted small">100% secure payment</p>
               </div>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Related Products Section - Always visible if there are similar products */}
-      {similarProducts.length > 0 && (
-        <section className="py-5 bg-light">
-          <div className="container px-4 px-lg-5">
-            <RelatedProducts
-              products={similarProducts}
-              onProductClick={handleSimilarProductClick}
-              title="Related Products You Might Like"
-              maxDisplay={4}
-            />
-          </div>
-        </section>
-      )}
+      </div>
     </div>
   );
 };
 
-export default ProductPage;
+export default ProductsPage;
