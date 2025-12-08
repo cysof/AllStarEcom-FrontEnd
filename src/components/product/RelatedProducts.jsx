@@ -23,7 +23,12 @@ const RelatedProducts = ({
   // Filter only available products for display (must be is_available)
   // Don't filter by in_stock since related products are already available from backend
   const availableProducts = products
-    .filter((product) => product.is_available)
+    .filter((product) => {
+      console.log(
+        `🎁 Product "${product.name}": is_available=${product.is_available}, in_stock=${product.in_stock}`
+      );
+      return product.is_available;
+    })
     .slice(0, maxDisplay);
 
   console.log('🎁 Available products after filter:', availableProducts.length);
