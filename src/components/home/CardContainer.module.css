@@ -185,13 +185,13 @@
 @media (hover: none) and (pointer: coarse) {
   .viewMoreBtn:hover {
     background: transparent;
-    color: #10b981;
+    color: #e0e2dd;
     transform: none;
     box-shadow: none;
   }
 
   .viewMoreBtn:active {
-    background: #10b981;
-    color: white;
+    background: #018534;
+    color: rgb(5, 119, 43);
   }
 }

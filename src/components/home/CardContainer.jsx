@@ -81,7 +81,7 @@ const CardContainer = ({
               onClick={handleViewAllProducts}
               aria-label="View all products in the store"
             >
-              <span className={styles.btnText}>View All Products</span>
+              <span className={styles.btnText}>All Products</span>
               <span className={styles.btnIcon}>
                 <i className="bi bi-arrow-right"></i>
               </span>
