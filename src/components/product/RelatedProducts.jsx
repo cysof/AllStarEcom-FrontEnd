@@ -10,18 +10,27 @@ const RelatedProducts = ({
 }) => {
   const navigate = useNavigate();
 
+  // DEBUG
+  console.log('🎁 RelatedProducts received:', products);
+  console.log('🎁 Products length:', products?.length);
+
   // Early return if no products
   if (!products || products.length === 0) {
+    console.log('🎁 No products - returning null');
     return null;
   }
 
-  // Filter only available products for display
+  // Filter only available products for display (must be is_available)
+  // Don't filter by in_stock since related products are already available from backend
   const availableProducts = products
-    .filter((product) => product.is_available && product.in_stock)
+    .filter((product) => product.is_available)
     .slice(0, maxDisplay);
+
+  console.log('🎁 Available products after filter:', availableProducts.length);
 
   // If no available products after filtering, don't show the section
   if (availableProducts.length === 0) {
+    console.log('🎁 No available products after filtering - returning null');
     return null;
   }
 
@@ -131,12 +140,12 @@ const RelatedProducts = ({
                 {/* Product Info */}
                 <div className="related-product-info p-3">
                   {/* Category */}
-                  {product.category_name && (
+                  {product.category?.name && (
                     <small
                       className="text-muted d-block mb-1"
                       style={{ fontSize: '0.8rem' }}
                     >
-                      {product.category_name}
+                      {product.category.name}
                     </small>
                   )}
 
