@@ -1,0 +1,177 @@
+/* Wrapper */
+.product-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Image Area */
+.pc-image-wrapper {
+  position: relative;
+  display: block;
+  height: 220px;
+  background: #f8f9fa;
+}
+
+.pc-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.product-card:hover .pc-image {
+  transform: scale(1.06);
+}
+
+/* Overlay Out of Stock */
+.pc-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pc-overlay-badge {
+  background: #dc3545;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* NEW Tag */
+.pc-tag-new {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #0d6efd;
+  color: white;
+  padding: 4px 10px;
+  font-size: 0.68rem;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+/* Body */
+.pc-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Category */
+.pc-category {
+  font-size: 0.72rem;
+  color: #818181;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Title */
+.pc-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  height: 40px;
+  overflow: hidden;
+  line-height: 1.2;
+}
+
+.pc-title a {
+  color: #212529;
+  text-decoration: none;
+}
+
+.pc-title a:hover {
+  color: #0d6efd;
+}
+
+/* Price */
+.pc-price-main {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #198754;
+}
+
+.pc-price-sub {
+  display: block;
+  font-size: 0.72rem;
+  color: #6c757d;
+}
+
+/* Badges */
+.pc-badge {
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.pc-badge.success {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.pc-badge.warning {
+  background: #fff3cd;
+  color: #664d03;
+}
+
+.pc-badge.danger {
+  background: #f8d7da;
+  color: #842029;
+}
+
+.pc-badge.info {
+  background: #cff4fc;
+  color: #055160;
+}
+
+/* Status Row */
+.pc-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+/* Button */
+.pc-btn {
+  display: block;
+  width: 100%;
+  background: #198754;
+  color: white;
+  padding: 10px 0;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  margin-top: auto;
+}
+
+.pc-btn:hover {
+  background: #157347;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
+}
