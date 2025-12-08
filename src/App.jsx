@@ -31,6 +31,7 @@ import Terms from './components/ui/Terms';
 import ReturnPolicy from './components/ui/ReturnPolicy';
 import ShippingPolicy from './components/ui/ShippingPolicy';
 import ScrollToTop from './components/home/ScrollToTop';
+import OrderPage from './components/checkout/OrderPage';
 
 const App = () => {
   const [numCartItems, setNumCartItems] = useState(0);
@@ -119,6 +120,15 @@ const App = () => {
             <Route
               path="verification-success"
               element={<VerificationSuccess />}
+            />
+
+            <Route
+              path="order/:orderNumber"
+              element={
+                <ProtectedRoute>
+                  <OrderPage />
+                </ProtectedRoute>
+              }
             />
 
             <Route
