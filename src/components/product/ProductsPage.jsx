@@ -137,6 +137,15 @@ const ProductsPage = () => {
     return pages;
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    scrollToTop();
+  };
+
   if (loading && currentPage === 1) return <Spinner loading={loading} />;
 
   if (error && currentPage === 1)
@@ -353,13 +362,84 @@ const ProductsPage = () => {
               <Spinner loading={loading} />
             </div>
           ) : filteredProducts.length > 0 ? (
-            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-3">
-              {filteredProducts.map((product) => (
-                <div key={product.id} className="col d-flex">
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
+            <>
+              <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-3">
+                {filteredProducts.map((product) => (
+                  <div key={product.id} className="col d-flex">
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <nav aria-label="Page navigation" className="mt-5">
+                  <ul className="pagination justify-content-center">
+                    {/* Previous Button */}
+                    <li
+                      className={`page-item ${
+                        currentPage === 1 ? 'disabled' : ''
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                      >
+                        <i className="bi bi-chevron-left me-2"></i>Previous
+                      </button>
+                    </li>
+
+                    {/* Page Numbers */}
+                    {getPageNumbers().map((pageNum) => (
+                      <li
+                        key={pageNum}
+                        className={`page-item ${
+                          currentPage === pageNum ? 'active' : ''
+                        }`}
+                      >
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(pageNum)}
+                          style={
+                            currentPage === pageNum
+                              ? {
+                                  backgroundColor: '#10b981',
+                                  borderColor: '#10b981',
+                                }
+                              : {}
+                          }
+                        >
+                          {pageNum}
+                        </button>
+                      </li>
+                    ))}
+
+                    {/* Next Button */}
+                    <li
+                      className={`page-item ${
+                        currentPage === totalPages ? 'disabled' : ''
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                      >
+                        Next<i className="bi bi-chevron-right ms-2"></i>
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              )}
+
+              {/* Page Info */}
+              <div className="text-center mt-3 text-muted">
+                <p>
+                  Page {currentPage} of {totalPages}
+                </p>
+              </div>
+            </>
           ) : (
             <div className="text-center py-5">
               <div className="alert alert-warning">
